@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Management - HotelEase</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #f6f6f9;
+      padding: 2rem;
+    }
+
+    .main-title {
+      color: #363949;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub-title {
+      color: #363949;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #7380ec;
+    }
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #363949;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .payment-table-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .payment-table-header {
+      padding: 2rem 2rem 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-table-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #363949;
+    }
+
+    .payment-search {
+      display: flex;
+      align-items: center;
+      background: #f6f6f9;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+    }
+
+    .payment-search input {
+      border: none;
+      background: transparent;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      color: #363949;
+      width: 250px;
+    }
+
+    .payment-search input:focus {
+      outline: none;
+    }
+
+    .payment-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .payment-table thead {
+      background: #f8f9fb;
+      color: #a0aec0;
+    }
+
+    .payment-table th,
+    .payment-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+    }
+
+    .payment-table tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .payment-table tbody tr:hover {
+      background: #f8f9fb;
+    }
+
+    .payment-status {
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .payment-status.paid {
+      background: rgba(65, 241, 182, 0.1);
+      color: #41f1b6;
+    }
+
+    .amount {
+      font-weight: 600;
+      color: #363949;
+    }
+
+    .payment-date {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .payment-method-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f6f6f9;
+      border-radius: 4px;
+    }
+
+    .payment-method-icon span {
+      font-size: 1rem;
+    }
+
+    .monthly-stats {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .monthly-stats h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #363949;
+      margin-bottom: 1.5rem;
+    }
+
+    .month-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .month-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #f8f9fb;
+    }
+
+    .month-name {
+      font-weight: 500;
+      color: #363949;
+    }
+
+    .month-revenue {
+      font-weight: 600;
+      color: #7380ec;
+    }
+
+    .no-payments {
+      text-align: center;
+      padding: 3rem;
+      color: #777;
+    }
+
+    .no-payments .icon {
+      font-size: 4rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .payment-search {
+        width: 100%;
+      }
+
+      .payment-search input {
+        width: 100%;
+      }
+
+      .payment-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h2><span class="danger">HotelEase</span></h2>
+        </div>
+        <div class="close" id="close_btn">
+          <span class="material-symbols-sharp">close</span>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <a href="{% url 'hotelweb:admin_dashboard' %}">
+          <span class="material-symbols-sharp">grid_view</span>
+          <h3>Home</h3>
+        </a>
+        <a href="{% url 'hotelweb:admin_booking' %}">
+          <span class="material-symbols-sharp">calendar_month</span>
+          <h3>Booking</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_room' %}">
+          <span class="material-symbols-sharp">home</span>
+          <h3>Room</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_payment' %}" class="active">
+          <span class="material-symbols-sharp">payments</span>
+          <h3>Payment</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_about_us' %}">
+          <span class="material-symbols-sharp">receipt_long</span>
+          <h3>About us</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:logout' %}">
+          <span class="material-symbols-sharp">logout</span>
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div class="dashboard-container">
+        <header>
+          <h1>Payment Management</h1>
+        </header>
+      </div>
+
+      <!-- Payment Statistics -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="material-symbols-sharp icon">payments</span>
+          <h3>${{ total_revenue|floatformat:2 }}</h3>
+          <p>Total Revenue</p>
+        </div>
+        <div class="stat-card">
+          <span class="material-symbols-sharp icon">receipt_long</span>
+          <h3>{{ total_payments }}</h3>
+          <p>Total Payments</p>
+        </div>
+        <div class="stat-card">
+          <span class="material-symbols-sharp icon">calendar_today</span>
+          <h3>{{ payments_by_month|length }}</h3>
+          <p>Active Months</p>
+        </div>
+        <div class="stat-card">
+          <span class="material-symbols-sharp icon">trending_up</span>
+          <h3>${{ total_revenue|floatformat:0|default:"0" }}</h3>
+          <p>Average per Month</p>
+        </div>
+      </div>
+
+      <!-- Payment Table -->
+      <div class="payment-table-container">
+        <div class="payment-table-header">
+          <h2>Payment Transactions</h2>
+          <div class="payment-search">
+            <span class="material-symbols-sharp">search</span>
+            <input type="text" id="paymentSearch" placeholder="Search by name, room, or payment method...">
+          </div>
+        </div>
+
+        {% if paid_bookings %}
+        <table class="payment-table" id="paymentTable">
+          <thead>
+            <tr>
+              <th>Guest</th>
+              <th>Room</th>
+              <th>Amount</th>
+              <th>Payment Method</th>
+              <th>Payment Date</th>
+              <th>Status</th>
+              <th>Booking Dates</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in paid_bookings %}
+            <tr>
+              <td>
+                <div>{{ booking.guest_first_name }} {{ booking.guest_last_name }}</div>
+                <small style="color:#666;">{{ booking.guest_email }}</small>
+              </td>
+              <td>
+                <div>{{ booking.room.room_number }}</div>
+                <small style="color:#666;">{{ booking.room.room_type.name }}</small>
+              </td>
+              <td class="amount">${{ booking.total_price|floatformat:2 }}</td>
+              <td>
+                <div class="payment-method">
+                  {% comment %}
+                  <!-- Placeholder for payment method, ideally this would come from a payment_method field -->
+                  <!-- Currently assuming credit card as default -->
+                  {% endcomment %}
+                  <div class="payment-method-icon">
+                    <span class="material-symbols-sharp">credit_card</span>
+                  </div>
+                  <span>Credit Card</span>
+                </div>
+              </td>
+              <td class="payment-date">{{ booking.payment_date|date:"M d, Y H:i" }}</td>
+              <td>
+                <span class="payment-status paid">Paid</span>
+              </td>
+              <td>
+                <div>{{ booking.check_in_date|date:"M d" }} - {{ booking.check_out_date|date:"M d, Y" }}</div>
+                <small style="color:#666;">{{ booking.check_in_date|date:"Y" }}</small>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="no-payments">
+          <span class="material-symbols-sharp icon">payments</span>
+          <h2>No payments found</h2>
+          <p>There are no completed payments in the system yet.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Monthly Revenue -->
+      {% if payments_by_month %}
+      <div class="monthly-stats">
+        <h2>Monthly Revenue</h2>
+        <div class="month-list">
+          {% for month, revenue in payments_by_month.items %}
+          <div class="month-item">
+            <span class="month-name">{{ month }}</span>
+            <span class="month-revenue">${{ revenue|floatformat:2 }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Payment table search functionality
+          const searchInput = document.getElementById('paymentSearch');
+          const table = document.getElementById('paymentTable');
+          const rows = table ? table.querySelectorAll('tbody tr') : [];
+
+          searchInput?.addEventListener('keyup', function() {
+            const query = searchInput.value.toLowerCase();
+            
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              if (text.includes(query)) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            });
+          });
+        });
+      </script>
+    </main>
+  </div>
+
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

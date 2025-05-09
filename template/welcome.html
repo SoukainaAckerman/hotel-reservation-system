@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HotelEase - Welcome</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+
+  <style>
+    :root {
+      --primary-color: #7B68EE; /* Mis à jour avec Medium Slate Blue */
+      --primary-light: rgba(123, 104, 238, 0.1);
+      --primary-gradient: linear-gradient(135deg, #7B68EE, #5641DA);
+      --secondary-color: #4a3ec9;
+      --color-white: #fff;
+      --color-light: #f5f5ff;
+      --color-dark: #303342;
+      --color-dark-variant: #6c7483;
+      --color-background: #fafbff;
+      --color-purple-light: #e6e6fa;
+      --color-danger: #ff686b;
+      --color-success: #41f1b6;
+      --card-border-radius: 1.5rem;
+      --card-padding: 1.8rem;
+      --box-shadow: 0 0.75rem 1.5rem rgba(123, 104, 238, 0.12);
+      --transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-primary);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--color-white); /* Fond blanc pour le corps principal */
+      color: var(--color-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-bottom: 0;
+      margin: 0;
+      overflow-x: hidden; /* Empêche le défilement horizontal */
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+      position: relative;
+      padding-bottom: 0;
+      flex: 1 0 auto; /* Prend tout l'espace disponible mais ne rétrécit pas */
+      width: 100%; /* S'assure que le conteneur prend 100% de la largeur */
+      margin: 0; /* Supprime les marges */
+      max-width: 100%; /* Supprime la largeur maximale qui limitait le contenu */
+      overflow-x: hidden; /* Empêche le défilement horizontal */
+    }
+
+    /* Ajout d'une classe pour éléments qui apparaissent avec animation au scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Style pour le header utilisateur */
+    .user-header {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 0 0 0 15px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-header .welcome-text {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .user-header .user-name {
+      font-weight: 700;
+      color: var(--color-danger);
+    }
+
+    .user-header .user-icon {
+      background-color: var(--color-white);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .user-header .user-icon span {
+      color: var(--color-dark);
+      font-size: 20px;
+    }
+
+    /* WELCOME HEADER */
+    .welcome-header {
+      width: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("{% static 'room5.jpg' %}") center/cover no-repeat;
+      height: 300px;
+      padding: 3rem 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 0; /* Réduit la marge en bas du header */
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .welcome-title {
+      font-size: 4.2rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 1.2rem;
+      letter-spacing: 3px;
+      position: relative;
+      animation: fadeInDown 0.8s ease-out;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      font-family: 'Poppins', sans-serif;
+      text-transform: uppercase;
+    }
+
+    .welcome-subtitle {
+      font-size: 1.4rem;
+      color: white;
+      max-width: 650px;
+      margin: 0 auto;
+      animation: fadeIn 1s ease-out;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      line-height: 1.8;
+      padding: 0 20px;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ROOM CARDS SECTION */
+    main {
+      flex: 1;
+      padding: 0; /* Supprimer tout le padding */
+      animation: fadeIn 0.8s ease-out;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--color-white);
+    }
+
+    .recent_order {
+      background-color: var(--color-white); /* Changé de var(--color-purple-light) à blanc */
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 20px 30px; /* Réduire le padding vertical */
+      margin-top: 0;
+      margin-bottom: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .rooms-header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      padding: 15px 0;
+    }
+    
+    .elegant-title {
+      font-size: 0.9rem;
+      letter-spacing: 4px;
+      color: #a08d5d;
+      text-transform: uppercase;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .elegant-title::before,
+    .elegant-title::after {
+      content: "";
+      display: inline-block;
+      width: 30px;
+      height: 1px;
+      background-color: #a08d5d;
+    }
+    
+    .elegant-title .wavy-line {
+      font-size: 1.2rem;
+      color: #a08d5d;
+      line-height: 0;
+      position: relative;
+      top: -2px;
+    }
+    
+    .main-title {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 3rem;
+      font-weight: 500;
+      color: #333;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .rooms-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--primary-gradient);
+      border-radius: 3px;
+    }
+
+    .rooms-header h2 {
+      font-size: 2.8rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-shadow: 0px 0px 1px rgba(123, 104, 238, 0.2);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .rooms-subtitle {
+      text-align: center;
+      margin: 0.3rem auto 1rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--color-dark-variant);
+      letter-spacing: 1px;
+    }
+
+    /* Nouvelles cartes de chambres - Style moderne */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin: 30px auto;
+      max-width: 1200px;
+    }
+    
+    .room-card {
+      background-color: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .room-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+    
+    .room-card h3 {
+      font-size: 21px;
+      color: var(--color-dark);
+      margin: 15px 0 8px;
+      text-align: center;
+      font-weight: 600;
+      display: block;
+      width: 100%;
+    }
+    
+    .room-card .price-indicator {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      margin-top: 15px;
+    }
+    
+    .room-card .price-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 80%;
+      background: #42e695;
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .room-card .price-tag {
+      text-align: center;
+      padding: 10px 15px;
+      font-weight: 600;
+      color: #333;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    
+    .room-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    @media screen and (max-width: 992px) {
+      .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      .rooms-grid {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+      }
+    }
+
+    .room-card {
+      background-color: var(--color-white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .room-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .room-card:hover .room-img {
+      transform: scale(1.05);
+    }
+
+    .room-card h3 {
+      font-size: 18px;
+      color: var(--color-dark);
+      margin: 1.2rem 1.5rem 0.8rem;
+      position: relative;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    .room-card p {
+      color: #6c757d;
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 0 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .room-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .book-now-btn {
+      background: #2ecc71;
+      color: var(--color-white);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 8px rgba(46, 204, 113, 0.25);
+    }
+
+    .book-now-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(46, 204, 113, 0.35);
+      background: #27ae60;
+    }
+
+    .price {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .amount {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--color-dark);
+    }
+
+    .per-night {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+
+    /* RIGHT SIDEBAR - Optimisé pour la visibilité */
+    .right {
+      margin-top: 1.4rem;
+      width: 22rem;
+      padding: 1.5rem;
+      animation: slideInRight 0.8s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .top {
+      display: flex;
+      justify-content: end;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+      position: relative;
+      padding: 0.5rem;
+    }
+
+    .theme-toggler {
+      background-color: var(--color-light);
+      border-radius: 0.4rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem;
+      height: 1.6rem;
+      width: 4rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .theme-toggler span {
+      font-size: 1.2rem;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .theme-toggler span.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 0.4rem;
+    }
+
+    /* Profil utilisateur amélioré */
+    .profile {
+      display: flex;
+      gap: 1rem;
+      text-align: right;
+      background-color: var(--color-white);
+      padding: 0.7rem 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: var(--transition);
+      border: 1px solid rgba(115, 128, 236, 0.2);
+    }
+
+    .profile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-photo {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--primary-color);
+    }
+
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .info p {
+      margin: 0;
+    }
+
+    .info p:first-child {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 0.95rem;
+    }
+
+    .info p:last-child {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var (--color-dark);
+    }
+
+    /* RECENT UPDATES */
+    .recent_updates {
+      background-color: var(--color-white);
+      border-radius: var(--card-border-radius);
+      padding: var(--card-padding);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .recent_updates h2 {
+      color: var(--color-dark);
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+    }
+
+    .hotel-presentation {
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .hotel-presentation img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hotel-presentation h1 {
+      font-size: 1.2rem;
+      color: var(--color-dark);
+      margin-bottom: 0.8rem;
+    }
+
+    .hotel-presentation p {
+      font-size: 0.95rem;
+      color: var (--color-dark-variant);
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    /* SALES ANALYTICS */
+    .sales-analytics {
+      background-color: var(--color-white);
+      border-radius: var(--card-border-radius);
+      padding: var(--card-padding);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .sales-analytics h2 {
+      color: var(--color-dark);
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background-color: var(--color-light);
+      transition: var(--transition);
+    }
+
+    .item:hover {
+      transform: translateX(5px);
+    }
+
+    .item .icon {
+      background-color: var(--primary-light);
+      padding: 0.7rem;
+      border-radius: 50%;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item .icon span {
+      font-size: 1.5rem;
+    }
+
+    .right_text {
+      flex: 1;
+    }
+
+    .info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .item h5 {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .item h3 {
+      font-size: 1rem;
+    }
+
+    .success {
+      color: var(--color-success);
+    }
+
+    .danger {
+      color: var(--color-danger);
+    }
+
+    /* SERVICES SECTION - Modifié pour correspondre exactement à l'image */
+    .services-section {
+      margin-top: 1rem;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .services-header h2 {
+      font-size: 1.6rem;
+      color: var (--color-dark);
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+
+    .services-header p.description {
+      font-size: 0.85rem;
+      color: var (--color-dark-variant);
+      margin-bottom: 1rem;
+      max-width: 90%;
+      margin: 0 auto 0.8rem;
+      line-height: 1.4;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+    }
+
+    .service-card {
+      background-color: var(--color-light);
+      border-radius: 0.8rem;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      height: 110px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 3px 8px rgba(115, 128, 236, 0.15);
+    }
+
+    .service-card.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .service-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      border-radius: 50%;
+    }
+    
+    .service-icon img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .service-card:nth-child(1) .service-icon {
+      background-color: #8a5cf5;
+      color: white;
+    }
+    
+    .service-card:nth-child(2) .service-icon {
+      background-color: #5ad776;
+      color: white;
+    }
+    
+    .service-card:nth-child(3) .service-icon {
+      background-color: #f5865c;
+      color: white;
+    }
+    
+    .service-card:nth-child(4) .service-icon {
+      background-color: #5ccef5;
+      color: white;
+    }
+
+    .service-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-dark);
+    }
+
+    .service-card.active .service-name {
+      color: white;
+    }
+
+    .service-card:hover:not(.active) {
+      background-color: rgba(115, 128, 236, 0.1);
+    }
+
+    /* FOOTER */
+    .dashboard-footer, .boxed-footer {
+      margin-top: 2rem;
+      width: 100%;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+
+    .dashboard-footer {
+      background-color: var(--color-light);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: none;
+    }
+
+    .boxed-footer {
+      background-color: var(--color-white);
+      border-radius: var(--card-border-radius);
+      box-shadow: var(--box-shadow);
+      margin: 0 2rem 2rem;
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      color: var(--color-dark-variant);
+    }
+
+    .language-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--color-dark-variant);
+    }
+
+    /* Masquer le bouton de profil utilisateur en bas à gauche */
+    .intercom-lightweight-app,
+    #intercom-container,
+    .intercom-launcher-frame,
+    .intercom-notifications-frame,
+    [class*="intercom-"],
+    .user-profile-widget,
+    .user-support-widget,
+    .chat-support-icon,
+    .user-avatar-bottom-left,
+    .fixed-bottom-left,
+    body > div[style*="position: fixed"][style*="bottom: 20px"][style*="left: 20px"],
+    body > div[style*="z-index: 2147483"][style*="bottom: 20px"][style*="left: 20px"] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* CLIENT REVIEWS SECTION */
+    .reviews-section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background-color: var(--color-white); /* Fond blanc pour les avis */
+      margin-bottom: 2rem;
+      border-top: 1px solid rgba(115, 128, 236, 0.1);
+      border-bottom: 1px solid rgba(115, 128, 236, 0.1);
+    }
+    
+    .reviews-title {
+      margin-bottom: 3rem;
+      position: relative;
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    .reviews-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .reviews-header .small-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #7380ec;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .reviews-header .main-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    
+    .reviews-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .review-card {
+      background-color: var(--color-white);
+      padding: 2rem 1.8rem;
+      border-radius: 0.8rem;
+      width: 330px;
+      position: relative;
+      text-align: left;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+    
+    .review-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .quote-icon {
+      position: absolute;
+      top: -1.5rem;
+      left: 1.5rem;
+      width: 3rem;
+      height: 3rem;
+      background-color: #7B68EE; /* Changé pour Medium Slate Blue */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 0.2rem;
+    }
+    
+    .quote-icon .quote {
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    
+    .review-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #666;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+    
+    .reviewer-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .reviewer-img {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .reviewer-name {
+      font-size: 1.1rem;
+      color: var(--color-dark);
+      font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+      .reviews-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .review-card {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+
+    /* MODERN FOOTER DESIGN - Nouvel aspect exactement comme dans l'image */
+    .modern-footer {
+      background-color: var(--color-purple-light);
+      color: var(--color-dark);
+      padding: 4rem 2rem 1rem;
+      width: 100%;
+      margin: 0;
+      border-radius: 20px 20px 0 0;
+      border-top: 1px solid rgba(115, 128, 236, 0.2);
+      margin-top: 2rem;
+      box-sizing: border-box;
+      max-width: 98%;
+      position: relative;
+    }
+    
+    .footer-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Brand Section */
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .hotel-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .logo-letter {
+      background-color: #FFB400;
+      color: white;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    
+    .hotel-name {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--color-dark);
+    }
+    
+    .hotel-description {
+      color: var(--color-dark-variant);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Services Section */
+    .footer-services h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      color: var(--color-dark);
+      font-weight: 600;
+    }
+    
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.7rem;
+    }
+    
+    .footer-links a {
+      color: var(--color-dark-variant);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary-color);
+      padding-left: 5px;
+    }
+    
+    /* Contact Section */
+    .footer-contact h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      color: var(--color-dark);
+      font-weight: 600;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-icon {
+      width: 2.2rem;
+      height: 2.2rem;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    
+    .contact-icon span {
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .contact-info h4 {
+      color: var(--color-dark);
+      margin-bottom: 0.1rem;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    .contact-info p {
+      color: var(--color-dark-variant);
+      font-size: 0.9rem;
+    }
+    
+    /* Footer Bottom */
+    .footer-bottom {
+      border-top: 1px solid rgba(115, 128, 236, 0.1);
+      padding: 1rem 0;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .footer-bottom .copyright {
+      color: var(--color-dark-variant);
+      font-size: 0.85rem;
+    }
+
+    /* RESPONSIVENESS - Ajusté pour maintenir la cohérence */
+    @media screen and (max-width: 1200px) {
+      .container {
+        width: 94%;
+        grid-template-columns: 7rem auto 23rem;
+      }
+
+      .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media screen and (max-width: 992px) {
+      .container {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .profile .info {
+        display: none;
+      }
+
+      .right {
+        width: 94%;
+        margin: 0 auto;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .rooms-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .rooms-header h2 {
+        font-size: 2rem;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Styles pour le footer modifié avec contenu décalé vers la droite */
+    .new-footer-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .modern-footer {
+      background-color: var(--color-purple-light);
+      color: var(--color-dark);
+      padding: 2rem 0rem 1rem;
+      width: 100%;
+      margin: 0;
+      border-radius: 20px 20px 0 0;
+      border-top: 1px solid rgba(115, 128, 236, 0.2);
+      margin-top: 2rem;
+      box-sizing: border-box;
+      max-width: 98%;
+      position: relative;
+      text-align: center;
+    }
+    
+    .footer-content-wrapper {
+      width: 85%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-left: 12%; /* Décalage moyen - entre 8% et 15% */
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .footer-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-dark-variant);
+      margin: 0 auto 1.5rem;
+      max-width: 800px;
+      text-align: center;
+    }
+    
+    .footer-contact-info {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .footer-email {
+      font-size: 0.95rem;
+      color: var(--primary-color);
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+    
+    .footer-location {
+      font-size: 0.95rem;
+      color: var(--color-dark-variant);
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(115, 128, 236, 0.1);
+      padding: 1rem 0 0;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    
+    .copyright {
+      font-size: 0.85rem;
+      color: var(--color-dark-variant);
+    }
+  </style>
+
+  <script src="{% static 'script.js' %}"></script>
+  <script src="{% static 'admin_script.js' %}"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Section utilisateur en haut à droite - SUPPRIMÉE -->
+    
+    <!-- Bouton Theme Toggler supprimé -->
+    
+    <!-- Sidebar -->
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h2><span class="danger">HotelEase</span></h2>
+        </div>
+        <div class="close" id="close_btn">
+          <span class="material-symbols-sharp">close</span>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <a href="{% url 'welcome' %}" class="active">
+          <span class="material-symbols-sharp">grid_view</span>
+          <h3>Home</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:booking' %}">
+          <span class="material-symbols-sharp">calendar_month</span>
+          <h3>Booking</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:room' %}">
+          <span class="material-symbols-sharp">home</span>
+          <h3>Room</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:payement' %}">
+          <span class="material-symbols-sharp">payments</span>
+          <h3>Payment</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:about_us' %}">
+          <span class="material-symbols-sharp">receipt_long</span>
+          <h3>About us</h3>
+        </a>
+        
+        <a href="{% url 'hotelweb:logout' %}">
+          <span class="material-symbols-sharp">logout</span>
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <h1 class="welcome-title">Welcome to HotelEase</h1>
+      <p class="welcome-subtitle">Experience luxury and comfort in our premium rooms and services</p>
+    </div>
+
+    <main>
+      <!-- Available Rooms Section -->
+      <div class="recent_order">
+        <div class="rooms-header modern-title-section">
+          <h2 class="luxury-title">HotelEase <span>LUXURY ROOMS</span></h2>
+          <div class="title-decoration">
+            <span class="line"></span>
+            <span class="diamond"></span>
+            <span class="line"></span>
+          </div>
+          <p class="luxury-subtitle">Luxury Rooms & Suites</p>
+        </div>
+        
+        <div class="rooms-grid">
+          <!-- Room Card 1 -->
+          <div class="room-card">
+            <img src="{% static 'room1.jpg' %}" alt="Superior Room" class="room-img">
+            <h3>Superior Room</h3>
+            <p>A cozy and elegant room perfect for solo travelers or couples, featuring modern decor and comfort.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Room Card 2 -->
+          <div class="room-card">
+            <img src="{% static 'room2.jpg' %}" alt="Deluxe Room" class="room-img">
+            <h3>Deluxe Room</h3>
+            <p>Spacious and stylish, ideal for guests seeking extra comfort with premium furnishings and amenities.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Room Card 3 -->
+          <div class="room-card">
+            <img src="{% static 'room3.jpg' %}" alt="Family Room" class="room-img">
+            <h3>Family Room</h3>
+            <p>Designed for families, this room includes multiple beds and a relaxing space to enjoy your stay together.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Room Card 4 -->
+          <div class="room-card">
+            <img src="{% static 'room4.jpg' %}" alt="Executive Room" class="room-img">
+            <h3>Executive Room</h3>
+            <p>Luxurious room with separate living area and premium amenities for business travelers.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Room Card 5 -->
+          <div class="room-card">
+            <img src="{% static 'room5.jpg' %}" alt="Ocean View Room" class="room-img">
+            <h3>Ocean View Room</h3>
+            <p>Stunning room with panoramic sea views and a serene atmosphere for a peaceful getaway.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Room Card 6 -->
+          <div class="room-card">
+            <img src="{% static 'room6.jpg' %}" alt="Standard Room" class="room-img">
+            <h3>Standard Room</h3>
+            <p>Comfortable and well-equipped, ideal for short stays with all the essential amenities.</p>
+            <div class="room-footer">
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Client Reviews Section -->
+      <div class="reviews-section">
+        <h2 class="reviews-title">
+          <div class="reviews-header">
+            <div class="small-title">REVIEWS</div>
+            <div class="main-title">What Our Customers Say</div>
+          </div>
+        </h2>
+        
+        <div class="reviews-container">
+          <!-- Review Card 1 - Houyam Bensalah -->
+          <div class="review-card">
+            <div class="quote-icon">
+              <span class="quote">"</span>
+            </div>
+            <p class="review-text">HotelEase provided an exceptional experience. The modern design, fast Wi-Fi, and peaceful atmosphere made it ideal for both work and rest. Highly recommended for anyone visiting the city.</p>
+            <div class="reviewer-info">
+              <img src="{% static 'avatar_img2.png' %}" alt="Houyam Bensalah" class="reviewer-img">
+              <h3 class="reviewer-name">Houyam Bensalah</h3>
+            </div>
+          </div>
+          
+          <!-- Review Card 2 - Sophia Berrada -->
+          <div class="review-card">
+            <div class="quote-icon">
+              <span class="quote">"</span>
+            </div>
+            <p class="review-text">My experience at HotelEase was absolutely delightful. The attention to detail, from the cozy ambiance to the impeccable cleanliness, made me feel at home instantly. The staff went above and beyond to ensure a relaxing stay.</p>
+            <div class="reviewer-info">
+              <img src="{% static 'avatar_img2.png' %}" alt="Sophia Berrada" class="reviewer-img">
+              <h3 class="reviewer-name">Sophia Berrada</h3>
+            </div>
+          </div>
+          
+          <!-- Review Card 3 - Karim El Amrani -->
+          <div class="review-card">
+            <div class="quote-icon">
+              <span class="quote">"</span>
+            </div>
+            <p class="review-text">Staying at HotelEase exceeded my expectations. The location is perfect, the breakfast was fresh and varied, and every team member greeted me with genuine kindness. I will definitely be returning on my next visit.</p>
+            <div class="reviewer-info">
+              <img src="{% static 'profile-5.jpg' %}" alt="Karim El Amrani" class="reviewer-img">
+              <h3 class="reviewer-name">Karim El Amrani</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="right">
+      <div class="top">
+        <button id="menu_bar">
+          <span class="material-symbols-sharp">menu</span>
+        </button>
+
+        <!-- Bouton theme-toggler supprimé -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Nouveau footer simplifié avec email de contact et texte centré -->
+  <div class="new-footer-container">
+    <div class="modern-footer">
+      <div class="footer-content-wrapper">
+        <p class="footer-text">Experience luxury and comfort with our premium services. HotelEase provides an exceptional stay with attention to every detail for our valued guests.</p>
+        
+        <div class="footer-contact-info">
+          <p class="footer-email">contact@hotelease.com</p>
+          <p class="footer-location">Casablanca</p>
+        </div>
+        
+        <div class="footer-bottom">
+          <p class="copyright">© HotelEase 2025 | All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Script du theme-toggler supprimé
+    
+    // Service card interaction améliorée
+    const serviceCards = document.querySelectorAll('.service-card');
+    
+    serviceCards.forEach(card => {
+      card.addEventListener('click', () => {
+        // Retirer la classe active de toutes les cartes
+        serviceCards.forEach(c => c.classList.remove('active'));
+        // Ajouter la classe active à la carte cliquée
+        card.classList.add('active');
+        
+        // Animation subtile lors du clic
+        card.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          card.style.transform = 'translateY(-5px)';
+        }, 150);
+      });
+    });
+    
+    // Animation for room cards on scroll
+    const roomCards = document.querySelectorAll('.room-card');
+    
+    function checkScroll() {
+      roomCards.forEach(card => {
+        const cardPosition = card.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.3;
+        
+        if (cardPosition < screenPosition) {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }
+      });
+    }
+    
+    // Set initial state for animation
+    roomCards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    });
+    
+    // Check scroll position on load and scroll
+    window.addEventListener('load', checkScroll);
+    window.addEventListener('scroll', checkScroll);
+  </script>
+</body>
+</html>

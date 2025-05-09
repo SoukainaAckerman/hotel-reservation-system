@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment - HotelEase</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+    <style>
+        :root {
+            --primary-color: #7380ec;
+            --color-white: #fff;
+            --color-light: rgba(132, 139, 200, 0.18);
+            --color-dark: #363949;
+            --color-dark-variant: #677483;
+            --color-background: #f0f0ff;
+            --box-shadow: 0 1rem 2rem var(--color-light);
+            --border-radius: 1.5rem;
+            --card-padding: 1.8rem;
+            --card-border-radius: 1.5rem;
+            --transition: all 300ms ease;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-background);
+            color: var(--color-dark);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        aside {
+            min-width: 240px;
+            max-width: 260px;
+            background: var(--color-white);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+            z-index: 2;
+        }
+        
+        main {
+            flex: 1;
+            padding: 2.5rem 3rem;
+            background: var(--color-background);
+        }
+        
+        /* Payment-specific styles */
+        .payment-container {
+            background: var(--color-white);
+            border-radius: var(--card-border-radius);
+            padding: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .payment-title {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+        
+        .payment-title:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(132, 139, 200, 0.1);
+            animation: slideIn 0.5s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--color-dark);
+            margin-bottom: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .booking-summary {
+            background: rgba(115, 128, 236, 0.05);
+            border-radius: var(--card-border-radius);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .booking-summary:hover {
+            box-shadow: 0 0.5rem 1.5rem rgba(115, 128, 236, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        
+        .detail-column {
+            width: 48%;
+        }
+        
+        .room-info {
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .room-info:hover {
+            transform: translateX(5px);
+        }
+        
+        .room-info .label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-dark-variant);
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+        
+        .room-info .value {
+            font-size: 1.1rem;
+            color: var(--color-dark);
+            font-weight: 500;
+        }
+        
+        .room-info .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: rgba(115, 128, 236, 0.2);
+            margin: 1.8rem 0;
+        }
+        
+        .total-amount {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(115, 128, 236, 0.08);
+            border-radius: 1rem;
+            transition: var (--transition);
+        }
+        
+        .total-amount:hover {
+            background: rgba(115, 128, 236, 0.12);
+        }
+        
+        .total-amount .label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--color-dark);
+        }
+        
+        .total-amount .amount {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .payment-deadline {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            font-size: 0.95rem;
+            color: var(--color-dark-variant);
+            padding: 0.8rem 1rem;
+            background: rgba(255, 165, 0, 0.1);
+            border-radius: 0.8rem;
+            border-left: 3px solid orange;
+        }
+        
+        .payment-deadline .material-symbols-sharp {
+            color: orange;
+        }
+        
+        /* Payment History Table Styles */
+        .payment-history-table {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--box-shadow);
+            background: var(--color-white);
+        }
+        
+        .payment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95rem;
+        }
+        
+        .payment-table th {
+            background: rgba(115, 128, 236, 0.05);
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-dark);
+            border-bottom: 1px solid rgba(115, 128, 236, 0.1);
+        }
+        
+        .payment-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(115, 128, 236, 0.05);
+            color: var(--color-dark-variant);
+            transition: var(--transition);
+        }
+        
+        .payment-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .payment-table tr {
+            transition: var(--transition);
+        }
+        
+        .payment-table tr:hover td {
+            background: rgba(115, 128, 236, 0.03);
+            color: var(--color-dark);
+            transform: scale(1.005);
+        }
+        
+        .status-pill {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+        }
+        
+        .status-pill.paid {
+            background: rgba(16, 185, 129, 0.1);
+            color: rgb(16, 185, 129);
+        }
+        
+        .status-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        .export-pdf-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 0.2rem 0.5rem rgba(115, 128, 236, 0.2);
+        }
+        
+        .export-pdf-btn:hover {
+            background: rgba(115, 128, 236, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 0.4rem 0.8rem rgba(115, 128, 236, 0.3);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.8rem;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .info-item label {
+            font-size: 0.95rem;
+            color: var(--color-dark-variant);
+            font-weight: 500;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(115, 128, 236, 0.05);
+            border: 1px solid rgba(115, 128, 236, 0.1);
+            border-radius: 1rem;
+            padding: 0.7rem 1.2rem;
+            gap: 0.8rem;
+            transition: var(--transition);
+        }
+        
+        .input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(115, 128, 236, 0.1);
+        }
+        
+        .input-wrapper input {
+            border: none;
+            background: transparent;
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 1rem;
+            color: var(--color-dark);
+            font-family: inherit;
+        }
+        
+        .input-wrapper input:focus {
+            outline: none;
+        }
+        
+        .input-wrapper .material-symbols-sharp {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .edit-icon {
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .edit-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 1.8rem;
+            border: 2px solid rgba(115, 128, 236, 0.1);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--color-white);
+            min-width: 150px;
+        }
+        
+        .payment-method:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(115, 128, 236, 0.1);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background: rgba(115, 128, 236, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(115, 128, 236, 0.15);
+        }
+        
+        .method-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .payment-method.active .method-icon {
+            transform: scale(1.1);
+        }
+        
+        .method-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            transition: var(--transition);
+        }
+        
+        .pay-now-btn {
+            background: linear-gradient(135deg, var(--primary-color), #5a67e9);
+            color: white;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 2rem;
+            transition: var(--transition);
+            box-shadow: 0 0.4rem 1rem rgba(115, 128, 236, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pay-now-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .pay-now-btn:hover {
+            background: linear-gradient(135deg, #5a67e9, var(--primary-color));
+            transform: translateY(-3px);
+            box-shadow: 0 0.6rem 1.5rem rgba(115, 128, 236, 0.4);
+        }
+        
+        .pay-now-btn:hover::before {
+            left: 100%;
+        }
+        
+        .pay-now-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .payment-success-message {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1));
+            border-radius: var(--card-border-radius);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            animation: successPulse 2s infinite alternate;
+        }
+        
+        @keyframes successPulse {
+            from { box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+            to { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: rgb(16, 185, 129);
+            margin-bottom: 1.5rem;
+            animation: scaleUp 0.5s ease-out;
+        }
+        
+        @keyframes scaleUp {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        
+        .success-icon .material-symbols-sharp {
+            font-size: 5rem;
+        }
+        
+        .payment-success-message h2 {
+            color: rgb(16, 185, 129);
+            font-size: 2rem;
+            margin-bottom: 1.2rem;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .payment-success-message p {
+            color: var(--color-dark);
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .payment-details {
+            color: var(--color-dark-variant);
+            font-size: 1rem;
+            animation: fadeIn 2s ease-out;
+        }
+        
+        .view-booking-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1.8rem;
+            transition: var(--transition);
+            box-shadow: 0 0.3rem 0.8rem rgba(115, 128, 236, 0.2);
+        }
+        
+        .view-booking-btn:hover {
+            background: linear-gradient(135deg, var(--primary-color), #5a67e9);
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(115, 128, 236, 0.3);
+        }
+        
+        .no-booking-message {
+            text-align: center;
+            padding: 4rem 2rem;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .icon-large {
+            font-size: 5rem;
+            color: rgba(115, 128, 236, 0.3);
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .no-booking-message h2 {
+            font-size: 1.8rem;
+            color: var(--color-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .no-booking-message p {
+            font-size: 1.1rem;
+            color: var (--color-dark-variant);
+            margin-bottom: 2rem;
+        }
+        
+        .booking-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #5a67e9);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 0.4rem 1rem rgba(115, 128, 236, 0.3);
+        }
+        
+        .booking-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.6rem 1.5rem rgba(115, 128, 236, 0.4);
+        }
+        
+        .booking-link::before {
+            content: "\e89e"; /* "add" icon */
+            font-family: 'Material Symbols Sharp';
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+            main {
+                padding: 2rem;
+            }
+            
+            .payment-container {
+                padding: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            aside {
+                max-width: 100vw;
+                min-width: 0;
+            }
+            
+            main {
+                padding: 1.5rem;
+            }
+            
+            .payment-container {
+                padding: 1.5rem;
+                margin: 0;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-column {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+            
+            .payment-table {
+                font-size: 0.8rem;
+            }
+            
+            .payment-table th,
+            .payment-table td {
+                padding: 0.8rem 0.6rem;
+            }
+            
+            .export-pdf-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            .payment-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+            
+            .total-amount .amount {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <h2><span class="danger">HotelEase</span></h2>
+                </div>
+                <div class="close" id="close_btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="{% url 'welcome' %}" {% if request.path == '/welcome/' %}class="active"{% endif %}>
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Home</h3>
+                </a>
+                <a href="{% url 'hotelweb:booking' %}" {% if request.path == '/hotelweb/booking/' %}class="active"{% endif %}>
+                    <span class="material-symbols-sharp">calendar_month</span>
+                    <h3>Booking</h3>
+                </a>
+                <a href="{% url 'hotelweb:room' %}" {% if request.path == '/hotelweb/room/' %}class="active"{% endif %}>
+                    <span class="material-symbols-sharp">home</span>
+                    <h3>Room</h3>
+                </a>
+                <a href="{% url 'hotelweb:payement' %}" {% if request.path == '/hotelweb/payement/' %}class="active"{% endif %}>
+                    <span class="material-symbols-sharp">payments</span>
+                    <h3>Payment</h3>
+                </a>
+                <a href="{% url 'hotelweb:about_us' %}" {% if request.path == '/hotelweb/about-us/' %}class="active"{% endif %}>
+                    <span class="material-symbols-sharp">receipt_long</span>
+                    <h3>About us</h3>
+                </a>
+                <a href="{% url 'hotelweb:logout' %}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main>
+            <div class="payment-container">
+                <h1 class="payment-title">Payment Method</h1>
+                
+                <!-- Payment success message (hidden by default) -->
+                <div id="paymentSuccessMessage" class="payment-success-message" style="display: none;">
+                    <div class="success-icon">
+                        <span class="material-symbols-sharp">check_circle</span>
+                    </div>
+                    <h2>Payment Successful!</h2>
+                    <p>Your payment has been processed successfully. Thank you for your booking.</p>
+                    <p class="payment-details">Transaction completed on <span id="paymentDate"></span></p>
+                    <a href="{% url 'hotelweb:booking' %}" class="view-booking-btn">View My Bookings</a>
+                </div>
+                
+                <div id="paymentFormContainer">
+                    {% if booking %}
+                    <div class="booking-summary">
+                        <h2 class="section-title">Booking Summary</h2>
+                        <div class="summary-details">
+                            <div class="detail-row">
+                                <div class="detail-column">
+                                    <div class="room-info">
+                                        <span class="label">Room Type:</span>
+                                        <span class="value">{{ booking.room.room_type.name }}</span>
+                                    </div>
+                                    
+                                    <div class="room-info">
+                                        <span class="label">Price Per Night:</span>
+                                        <span class="value">${{ booking.room.room_type.price_per_night }}</span>
+                                    </div>
+                                    
+                                    <div class="room-info">
+                                        <span class="label">Check-out:</span>
+                                        <span class="value">{{ booking.check_out_date }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-column">
+                                    <div class="room-info">
+                                        <span class="label">Room Number:</span>
+                                        <span class="value highlight">{{ booking.room.room_number }}</span>
+                                    </div>
+                                    
+                                    <div class="room-info">
+                                        <span class="label">Check-in:</span>
+                                        <span class="value">{{ booking.check_in_date }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="divider"></div>
+                            
+                            <div class="room-info total-amount">
+                                <span class="label">Total Amount:</span>
+                                <span class="value amount">${{ booking.total_price }}</span>
+                            </div>
+                            
+                            <!-- Suppression de la notification de délai de paiement qui était ici -->
+                        </div>
+                    </div>
+                    
+                    <!-- Past Payments Section -->
+                    {% if paid_bookings %}
+                    <div class="section paid-bookings-section">
+                        <h2 class="section-title">Your Paid Bookings</h2>
+                        <div class="payment-history-table">
+                            <table class="payment-table">
+                                <thead>
+                                    <tr>
+                                        <th>Room</th>
+                                        <th>Type</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Payment Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for paid_booking in paid_bookings %}
+                                    <tr>
+                                        <td>{{ paid_booking.room.room_number }}</td>
+                                        <td>{{ paid_booking.room.room_type.name }}</td>
+                                        <td>{{ paid_booking.check_in_date }}</td>
+                                        <td>{{ paid_booking.check_out_date }}</td>
+                                        <td>${{ paid_booking.total_price }}</td>
+                                        <td><span class="status-pill paid">Paid</span></td>
+                                        <td>{{ paid_booking.payment_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            <button class="export-pdf-btn" data-booking-id="{{ paid_booking.id }}">
+                                                <span class="material-symbols-sharp">download</span> Export PDF
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="section">
+                        <h2 class="section-title">Customer Information</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Holder</label>
+                                <div class="input-wrapper">
+                                    <span class="material-symbols-sharp">person</span>
+                                    <input type="text" placeholder="Enter holder name" value="{{ booking.guest_first_name }} {{ booking.guest_last_name }}">
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Email</label>
+                                <div class="input-wrapper">
+                                    <span class="material-symbols-sharp">mail</span>
+                                    <input type="email" placeholder="Enter email" value="{{ booking.guest_email }}">
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <label>Phone number</label>
+                                <div class="input-wrapper">
+                                    <span class="material-symbols-sharp">phone</span>
+                                    <input type="tel" placeholder="Enter phone number" value="{{ booking.guest_phone }}">
+                                    <span class="edit-icon material-symbols-sharp">edit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">Payment Method</h2>
+                        <div class="payment-methods">
+                            <div class="payment-method active" data-method="credit-card">
+                                <div class="method-icon">
+                                    <img src="{% static 'icons/credit-card.svg' %}" alt="Credit Card" onerror="this.src='https://via.placeholder.com/30?text=CC'">
+                                </div>
+                                <span>Credit Card</span>
+                            </div>
+                            <div class="payment-method" data-method="paypal">
+                                <div class="method-icon">
+                                    <img src="{% static 'icons/paypal.svg' %}" alt="PayPal" onerror="this.src='https://via.placeholder.com/30?text=PP'">
+                                </div>
+                                <span>PayPal</span>
+                            </div>
+                            <div class="payment-method" data-method="visa">
+                                <div class="method-icon">
+                                    <img src="{% static 'icons/visa.svg' %}" alt="Visa" onerror="this.src='https://via.placeholder.com/30?text=Visa'">
+                                </div>
+                                <span>Visa</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Credit Card Form -->
+                        <div class="payment-form credit-card-form">
+                            <div class="info-grid">
+                                <div class="info-item full-width">
+                                    <label>Card Number</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">credit_card</span>
+                                        <input type="text" placeholder="1234 5678 9012 3456">
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Expiry Date</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" placeholder="MM/YY">
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>CVV</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PayPal Form -->
+                        <div class="payment-form paypal-form" style="display:none;">
+                            <div class="info-grid">
+                                <div class="info-item full-width">
+                                    <label>PayPal Email</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">mail</span>
+                                        <input type="email" placeholder="your-email@example.com">
+                                    </div>
+                                </div>
+                                <div class="info-item full-width">
+                                    <label>PayPal Password</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">lock</span>
+                                        <input type="password" placeholder="********">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Visa Form -->
+                        <div class="payment-form visa-form" style="display:none;">
+                            <div class="info-grid">
+                                <div class="info-item full-width">
+                                    <label>Visa Card Number</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">credit_card</span>
+                                        <input type="text" placeholder="4XXX XXXX XXXX XXXX">
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Card Holder Name</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">person</span>
+                                        <input type="text" placeholder="Full Name on Card">
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Expiry Date</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" placeholder="MM/YY">
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>CVV</label>
+                                    <div class="input-wrapper">
+                                        <span class="material-symbols-sharp">lock</span>
+                                        <input type="text" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="payNowBtn" class="pay-now-btn" data-booking-id="{{ booking.id }}">Pay Now ${{ booking.total_price }}</button>
+                    
+                    {% else %}
+                    <div class="no-booking-message">
+                        <span class="material-symbols-sharp icon-large">search_off</span>
+                        <h2>No active booking found</h2>
+                        <p>You don't have any confirmed bookings to pay for.</p>
+                        <a href="{% url 'hotelweb:booking' %}" class="booking-link">Make a Booking</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle payment method selection
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const paymentForms = document.querySelectorAll('.payment-form');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const selectedMethod = this.getAttribute('data-method');
+                    paymentForms.forEach(form => {
+                        if (form.classList.contains(`${selectedMethod}-form`)) {
+                            form.style.display = 'block';
+                        } else {
+                            form.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Handle payment process
+            const payNowBtn = document.getElementById('payNowBtn');
+            if (payNowBtn) {
+                payNowBtn.addEventListener('click', function() {
+                    const bookingId = this.getAttribute('data-booking-id');
+                    const selectedMethod = document.querySelector('.payment-method.active').getAttribute('data-method');
+                    
+                    // Disable button and show loading state
+                    payNowBtn.disabled = true;
+                    payNowBtn.textContent = 'Processing...';
+                    
+                    // Create form data for submission
+                    const formData = new FormData();
+                    formData.append('booking_id', bookingId);
+                    formData.append('payment_method', selectedMethod);
+                    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                    
+                    // Send payment request
+                    fetch('{% url "hotelweb:process_payment" %}', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            document.getElementById('paymentFormContainer').style.display = 'none';
+                            document.getElementById('paymentSuccessMessage').style.display = 'block';
+                            document.getElementById('paymentDate').textContent = data.payment_date;
+                        } else {
+                            // Show error message
+                            alert('Payment failed: ' + data.message);
+                            payNowBtn.disabled = false;
+                            payNowBtn.textContent = 'Try Again';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while processing your payment. Please try again.');
+                        payNowBtn.disabled = false;
+                        payNowBtn.textContent = 'Try Again';
+                    });
+                });
+            }
+            
+            // Add PDF export functionality
+            // Include jsPDF library
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            document.head.appendChild(script);
+            
+            // Add another script for html2canvas
+            const html2canvasScript = document.createElement('script');
+            html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            document.head.appendChild(html2canvasScript);
+            
+            // Wait for libraries to load
+            script.onload = function() {
+                html2canvasScript.onload = function() {
+                    // Handle PDF export buttons
+                    const exportButtons = document.querySelectorAll('.export-pdf-btn');
+                    exportButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const bookingId = this.getAttribute('data-booking-id');
+                            const row = this.closest('tr');
+                            
+                            // Get data from the row
+                            const roomNumber = row.cells[0].textContent;
+                            const roomType = row.cells[1].textContent;
+                            const checkIn = row.cells[2].textContent;
+                            const checkOut = row.cells[3].textContent;
+                            const amount = row.cells[4].textContent;
+                            const paymentDate = row.cells[6].textContent;
+                            
+                            // Generate PDF
+                            generatePaymentPDF({
+                                roomNumber,
+                                roomType,
+                                checkIn,
+                                checkOut,
+                                amount,
+                                paymentDate,
+                                bookingId
+                            });
+                        });
+                    });
+                };
+            };
+            
+            // Function to generate payment PDF
+            function generatePaymentPDF(data) {
+                // Create a new jsPDF instance
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                
+                // Set document properties
+                doc.setProperties({
+                    title: 'Payment Receipt - HotelEase',
+                    subject: 'Payment Receipt for Booking #' + data.bookingId,
+                    author: 'HotelEase',
+                    creator: 'HotelEase'
+                });
+                
+                // Add hotel logo/header
+                doc.setFontSize(22);
+                doc.setTextColor(38, 99, 235); // #2563eb
+                doc.text('HotelEase', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text('Payment Receipt', 105, 30, { align: 'center' });
+                
+                // Add horizontal line
+                doc.setDrawColor(200, 200, 200);
+                doc.line(20, 35, 190, 35);
+                
+                // Add payment information
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Receipt Details', 20, 45);
+                
+                doc.setFontSize(10);
+                doc.text('Booking Reference: #' + data.bookingId, 20, 55);
+                doc.text('Payment Date: ' + data.paymentDate, 20, 62);
+                
+                // Add current date
+                const currentDate = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                doc.text('Document Generated: ' + currentDate, 20, 69);
+                
+                // Add room details
+                doc.setFontSize(12);
+                doc.text('Room Information', 20, 85);
+                
+                doc.setFontSize(10);
+                const roomDetails = [
+                    ['Room Type:', data.roomType],
+                    ['Room Number:', data.roomNumber],
+                    ['Check-in Date:', data.checkIn],
+                    ['Check-out Date:', data.checkOut]
+                ];
+                
+                let yPos = 95;
+                roomDetails.forEach(detail => {
+                    doc.text(detail[0], 25, yPos);
+                    doc.text(detail[1], 70, yPos);
+                    yPos += 7;
+                });
+                
+                // Add payment details
+                doc.setFontSize(12);
+                doc.text('Payment Information', 20, 130);
+                
+                doc.setFontSize(10);
+                doc.text('Amount Paid:', 25, 140);
+                doc.text(data.amount, 70, 140);
+                
+                doc.text('Payment Status:', 25, 147);
+                doc.text('Paid', 70, 147);
+                
+                // Add a box around the total amount
+                doc.setDrawColor(38, 99, 235);
+                doc.setFillColor(240, 249, 255);
+                doc.roundedRect(110, 135, 70, 30, 3, 3, 'FD');
+                
+                doc.setTextColor(38, 99, 235);
+                doc.setFontSize(12);
+                doc.text('Total Amount Paid', 145, 145, { align: 'center' });
+                
+                doc.setFontSize(16);
+                doc.setTextColor(38, 99, 235);
+                doc.text(data.amount, 145, 155, { align: 'center' });
+                
+                // Add footer
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text('This is an electronically generated receipt and does not require a signature.', 105, 270, { align: 'center' });
+                doc.text('Thank you for choosing HotelEase', 105, 275, { align: 'center' });
+                
+                // Save the PDF
+                doc.save('HotelEase_Payment_Receipt_' + data.bookingId + '.pdf');
+            }
+        });
+    </script>
+</body>
+</html>

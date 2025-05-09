@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Room Management - HotelEase</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+  <style>
+    :root {
+      --primary-color: #7380ec;
+      --primary-light: rgba(115, 128, 236, 0.1);
+      --primary-gradient: linear-gradient(135deg, #7380ec, #5a67e9);
+      --secondary-color: #2563eb;
+      --color-white: #fff;
+      --color-light: #f0f0ff;
+      --color-dark: #363949;
+      --color-dark-variant: #677483;
+      --color-gray: #f0f0ff;
+      --color-danger: #ff7782;
+      --color-success: #41f1b6;
+      --card-border-radius: 1.5rem;
+      --card-padding: 1.8rem;
+      --box-shadow: 0 0.75rem 1.5rem rgba(115, 128, 236, 0.15);
+      --transition: all 300ms ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--color-light);
+      color: var(--color-dark);
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+      padding: 0;
+      background-color: var(--color-light);
+    }
+
+    /* Header Styles */
+    .page-header {
+      text-align: center;
+      padding: 3rem 0;
+      background-color: var(--color-white);
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-title {
+      color: var(--color-dark);
+      font-size: 2.8rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      letter-spacing: 1px;
+      animation: fadeInDown 0.8s ease-out;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-title::after {
+      display: none;
+    }
+
+    .page-header::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: var(--primary-gradient);
+    }
+
+    .page-subtitle {
+      color: var(--color-dark-variant);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Room Container Styles */
+    .room-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      transition: var(--transition);
+    }
+
+    .slider-nav:hover {
+      background: var(--primary-light);
+    }
+
+    .slider-nav span {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .prev-btn {
+      left: 10px;
+    }
+
+    .next-btn {
+      right: 10px;
+    }
+
+    /* Room Grid Styles */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      padding: 1rem 0;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    /* Room Card Styles */
+    .room-card {
+      background-color: var(--color-white);
+      border-radius: var(--card-border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .room-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 1rem 2rem rgba(115, 128, 236, 0.2);
+    }
+
+    .room-image-container {
+      position: relative;
+      overflow: hidden;
+      height: 230px;
+    }
+
+    .room-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .room-card:hover .room-image {
+      transform: scale(1.05);
+    }
+
+    .room-tag {
+      position: absolute;
+      top: 20px;
+      right: 0;
+      background: var(--primary-gradient);
+      color: var(--color-white);
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 4px 0 0 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .room-details {
+      padding: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .room-type {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: 0.3rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .room-type::after {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 3px;
+      background: var(--primary-gradient);
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .room-card:hover .room-type::after {
+      opacity: 1;
+      width: 60px;
+    }
+
+    .room-description {
+      color: var(--color-dark-variant);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .room-features {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .feature-icon {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
+
+    .feature-text {
+      font-size: 0.75rem;
+      color: var(--color-dark-variant);
+    }
+
+    .book-now-btn {
+      background: var(--primary-gradient);
+      color: var(--color-white);
+      padding: 0.9rem 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(115, 128, 236, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .book-now-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .book-now-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(115, 128, 236, 0.3);
+    }
+
+    .book-now-btn:hover::before {
+      left: 100%;
+    }
+
+    .room-price {
+      font-size: 1.1rem;
+      color: var(--color-dark-variant);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .price-amount {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary-color);
+    }
+
+    .price-period {
+      font-size: 0.9rem;
+      color: var(--color-dark-variant);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .room-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 0;
+      }
+
+      .page-title {
+        font-size: 1.8rem;
+      }
+
+      .room-grid {
+        grid-template-columns: 1fr;
+        padding: 0;
+      }
+
+      .room-card {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .slider-nav {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .room-container {
+        padding: 0 1rem;
+      }
+
+      .room-details {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h2><span class="danger">HotelEase</span></h2>
+        </div>
+        <div class="close" id="close_btn">
+          <span class="material-symbols-sharp">close</span>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <a href="{% url 'welcome' %}">
+          <span class="material-symbols-sharp">grid_view</span>
+          <h3>Home</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:booking' %}">
+          <span class="material-symbols-sharp">calendar_month</span>
+          <h3>Booking</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:room' %}" class="active">
+          <span class="material-symbols-sharp">home</span>
+          <h3>Room</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:payement' %}">
+          <span class="material-symbols-sharp">payments</span>
+          <h3>Payment</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:about_us' %}">
+          <span class="material-symbols-sharp">receipt_long</span>
+          <h3>About us</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:logout' %}">
+          <span class="material-symbols-sharp">logout</span>
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div class="page-header">
+        <h1 class="page-title">Our Rooms</h1>
+      </div>
+
+      <div class="room-container">
+        <div class="slider-nav prev-btn">
+          <span class="material-symbols-sharp">chevron_left</span>
+        </div>
+        <div class="slider-nav next-btn">
+          <span class="material-symbols-sharp">chevron_right</span>
+        </div>
+
+        <div class="room-grid">
+          <!-- Superior Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room1.jpg' %}" alt="Superior Room" class="room-image">
+              <div class="room-tag">Popular</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Superior Room</h3>
+              <p class="room-description">A cozy and elegant room perfect for solo travelers or couples, featuring modern decor and comfort.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">king_bed</span>
+                  <span class="feature-text">King Bed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">wifi</span>
+                  <span class="feature-text">Free WiFi</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">desktop_windows</span>
+                  <span class="feature-text">TV</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Superior_Room.price_per_night }}</span> 
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Deluxe Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room2.jpg' %}" alt="Deluxe Room" class="room-image">
+              <div class="room-tag">Luxury</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Deluxe Room</h3>
+              <p class="room-description">Spacious and stylish, ideal for guests seeking extra comfort with premium furnishings and amenities.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">king_bed</span>
+                  <span class="feature-text">King Bed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">wifi</span>
+                  <span class="feature-text">Free WiFi</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">balcony</span>
+                  <span class="feature-text">Balcony</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Deluxe_Room.price_per_night }}</span>
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Family Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room3.jpg' %}" alt="Family Room" class="room-image">
+              <div class="room-tag">Family</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Family Room</h3>
+              <p class="room-description">Designed for families, this room includes multiple beds and a relaxing space to enjoy your stay together.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">bedroom_parent</span>
+                  <span class="feature-text">Multiple Beds</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">wifi</span>
+                  <span class="feature-text">Free WiFi</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">room_service</span>
+                  <span class="feature-text">Room Service</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Family_Room.price_per_night }}</span>
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Executive Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room4.jpg' %}" alt="Executive Room" class="room-image">
+              <div class="room-tag">Premium</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Executive Room</h3>
+              <p class="room-description">Luxurious room with separate living area and premium amenities for the discerning business traveler.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">king_bed</span>
+                  <span class="feature-text">King Bed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">work</span>
+                  <span class="feature-text">Work Space</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">balcony</span>
+                  <span class="feature-text">Balcony</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Executive_Room.price_per_night }}</span>
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Ocean View Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room5.jpg' %}" alt="Ocean View Room" class="room-image">
+              <div class="room-tag">Best View</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Ocean View Room</h3>
+              <p class="room-description">Stunning room with panoramic ocean views and premium amenities for an unforgettable stay.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">king_bed</span>
+                  <span class="feature-text">King Bed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">water</span>
+                  <span class="feature-text">Ocean View</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">balcony</span>
+                  <span class="feature-text">Balcony</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Ocean_View_Room.price_per_night }}</span>
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+
+          <!-- Standard Room -->
+          <div class="room-card">
+            <div class="room-image-container">
+              <img src="{% static 'room6.jpg' %}" alt="Standard Room" class="room-image">
+              <div class="room-tag">Economic</div>
+            </div>
+            <div class="room-details">
+              <h3 class="room-type">Standard Room</h3>
+              <p class="room-description">Comfortable and well-equipped, ideal for short stays with all the essential amenities.</p>
+              <div class="room-features">
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">single_bed</span>
+                  <span class="feature-text">Queen Bed</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">wifi</span>
+                  <span class="feature-text">Free WiFi</span>
+                </div>
+                <div class="feature-item">
+                  <span class="material-symbols-sharp feature-icon">tv</span>
+                  <span class="feature-text">Cable TV</span>
+                </div>
+              </div>
+              <div class="room-price">
+                <span class="price-amount">${{ room_types_dict.Standard_Room.price_per_night }}</span>
+                <span class="price-period">Per Night</span>
+              </div>
+              <a href="{% url 'hotelweb:booking' %}" class="book-now-btn">BOOK NOW</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Slider Navigation
+    const roomGrid = document.querySelector('.room-grid');
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
+    let currentPage = 0;
+    const cardsPerPage = 3;
+    const totalCards = document.querySelectorAll('.room-card').length;
+    const maxPages = Math.ceil(totalCards / cardsPerPage);
+
+    function updateSlider() {
+      const offset = currentPage * -100;
+      roomGrid.style.transform = `translateX(${offset}%)`;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        updateSlider();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < maxPages - 1) {
+        currentPage++;
+        updateSlider();
+      }
+    });
+
+    // Initialize room cards visibility
+    updateSlider();
+
+    // Add animations to the room cards on scroll
+    const roomCards = document.querySelectorAll('.room-card');
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    roomCards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+      observer.observe(card);
+    });
+  </script>
+
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

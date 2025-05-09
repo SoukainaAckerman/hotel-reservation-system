@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | HotelEase</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'admin.css' %}">
+
+  <script src="{% static 'script.js' %}"></script>
+  <script src="{% static 'admin.js' %}"></script>
+
+  <style>
+    /* Style pour les cartes de chambres */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 15px;
+      padding: 0;
+    }
+    
+    .room-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .room-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .room-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #363949;
+    }
+    
+    .room-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #f1f1f1;
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    
+    .room-progress {
+      height: 100%;
+      background: #41f1b6;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+    
+    .room-card p {
+      color: #677483;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    
+    .room-card p:last-child {
+      font-weight: 600;
+      font-size: 16px;
+      color: #363949;
+      margin-top: auto;
+    }
+    
+    /* Style pour l'en-tête de la section des chambres */
+    .room-section-header, .payment-section-header {
+      padding: 0 0 5px 0;
+      margin-top: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .room-section-header h2, .payment-section-header h2 {
+      color: #363949;
+      font-size: 24px;
+      margin-bottom: 0;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .room-section-header p {
+      color: #677483;
+      font-size: 14px;
+      margin-top: 3px;
+    }
+    
+    /* Style pour la section Payment Transactions */
+    .payment-container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      padding: 20px;
+      overflow: hidden;
+    }
+    
+    .payment-search-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    
+    .payment-search {
+      padding: 10px 15px 10px 40px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      width: 350px;
+      outline: none;
+      background: #f9fafb;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      color: #8b8c9f;
+      font-size: 18px;
+    }
+    
+    .payment-table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    
+    .payment-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    
+    .payment-table th {
+      text-align: left;
+      padding: 15px 20px;
+      color: #4a4a8a;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #f0f0f0;
+      background-color: rgba(115, 128, 236, 0.15);
+    }
+    
+    .payment-table td {
+      padding: 15px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #535461;
+    }
+    
+    .payment-table tbody tr:hover {
+      background-color: #f9fafb;
+    }
+    
+    .guest-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .guest-email {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    .room-number {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .room-type {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    .amount {
+      font-weight: 700;
+      color: #363949;
+    }
+    
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .payment-method span.material-symbols-sharp {
+      background: #f0f0f0;
+      border-radius: 4px;
+      padding: 4px;
+      color: #363949;
+    }
+    
+    .status-paid {
+      background-color: rgba(65, 241, 182, 0.15);
+      color: #41f1b6;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    
+    .booking-dates {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .booking-year {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    /* Responsive design pour tablettes et mobiles */
+    @media screen and (max-width: 1200px) {
+      .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .payment-search {
+        width: 250px;
+      }
+    }
+    
+    @media screen and (max-width: 600px) {
+      .rooms-grid {
+        grid-template-columns: 1fr;
+      }
+      .payment-search-container {
+        justify-content: center;
+      }
+      .payment-search {
+        width: 100%;
+      }
+      .payment-table th, .payment-table td {
+        padding: 10px;
+      }
+    }
+
+    /* Style amélioré pour la section Payment Transactions */
+    .payment-section-header {
+      padding: 0 0 10px 0;
+      margin-top: 30px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .payment-section-header h2 {
+      color: #363949;
+      font-size: 24px;
+      margin-bottom: 0;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .payment-stats {
+      display: flex;
+      align-items: center;
+    }
+
+    .payment-stat-item {
+      background-color: #f3f4f6;
+      border-radius: 10px;
+      padding: 8px 15px;
+      border: 2px solid #7380ec;
+      box-shadow: 0 3px 10px rgba(115, 128, 236, 0.2);
+    }
+
+    .total-count {
+      font-size: 18px;
+      font-weight: 700;
+      color: #7380ec;
+    }
+    
+    .payment-container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-top: 20px;
+      padding: 25px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .payment-search-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative;
+      max-width: 350px;
+      margin-left: auto;
+    }
+    
+    .payment-search {
+      padding: 12px 20px 12px 45px;
+      border: 1px solid #eaeaea;
+      border-radius: 30px;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+      background: #f9fafb;
+      transition: all 0.3s ease;
+    }
+    
+    .payment-search:focus {
+      border-color: #7380ec;
+      box-shadow: 0 0 0 3px rgba(115, 128, 236, 0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      color: #8b8c9f;
+      font-size: 18px;
+    }
+    
+    .payment-table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 10px;
+      scrollbar-width: thin;
+    }
+    
+    .payment-table-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .payment-table-container::-webkit-scrollbar-thumb {
+      background-color: #eaeaea;
+      border-radius: 10px;
+    }
+    
+    .payment-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+    }
+    
+    .payment-table th {
+      text-align: left;
+      padding: 15px 20px;
+      color: #4a4a8a;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #f0f0f0;
+      background-color: rgba(115, 128, 236, 0.15);
+    }
+    
+    .payment-table td {
+      padding: 18px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #535461;
+      vertical-align: middle;
+    }
+    
+    .payment-table tbody tr {
+      transition: background-color 0.2s;
+    }
+    
+    .payment-table tbody tr:hover {
+      background-color: #f9fafb;
+    }
+    
+    .payment-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .guest-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #363949;
+    }
+    
+    .guest-email {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    .room-number {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #363949;
+    }
+    
+    .room-type {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    .amount {
+      font-weight: 700;
+      color: #363949;
+      font-size: 15px;
+    }
+    
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .payment-method span.material-symbols-sharp {
+      background: #f0f0f0;
+      border-radius: 50%;
+      padding: 6px;
+      font-size: 16px;
+      color: #7380ec;
+    }
+    
+    .status-paid {
+      background-color: rgba(65, 241, 182, 0.15);
+      color: #41f1b6;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-block;
+    }
+    
+    .booking-dates {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #363949;
+    }
+    
+    .booking-year {
+      color: #8b8c9f;
+      font-size: 12px;
+    }
+    
+    .payment-table thead tr th:first-child {
+      border-top-left-radius: 10px;
+    }
+    
+    .payment-table thead tr th:last-child {
+      border-top-right-radius: 10px;
+    }
+    
+    /* Style pour le message "No payment transactions found" */
+    .no-payments-row td {
+      text-align: center;
+      padding: 40px 20px;
+      color: #8b8c9f;
+      font-style: italic;
+    }
+
+    /* Styles pour les nouveaux en-têtes de section */
+    .section-header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 35px;
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .section-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(115, 128, 236, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .section-icon span {
+      font-size: 24px;
+      color: #7380ec;
+    }
+    
+    .section-title h2 {
+      color: #363949;
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    
+    .section-title p {
+      color: #677483;
+      font-size: 14px;
+      margin: 5px 0 0 0;
+    }
+    
+    .section-action {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .view-all-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 16px;
+      background: #7380ec;
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .view-all-btn:hover {
+      background: #5a67e0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(115, 128, 236, 0.2);
+    }
+    
+    /* Styles spécifiques pour les conteneurs */
+    .rooms-grid {
+      margin-top: 0;
+    }
+    
+    .payment-container {
+      margin-top: 0;
+    }
+    
+    /* Style pour les messages d'absence de données */
+    .no-data-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 0;
+    }
+    
+    .no-data-message span {
+      font-size: 36px;
+      color: #e0e0e0;
+      margin-bottom: 10px;
+    }
+    
+    .no-data-message p {
+      color: #8b8c9f;
+      font-size: 16px;
+    }
+    
+    /* Responsive adjustments */
+    @media screen and (max-width: 768px) {
+      .section-header-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
+      
+      .section-action {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    /* Style des cartes de statistiques pour correspondre à l'image */
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stats-card {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .icon-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    
+    .icon-circle.primary {
+      background-color: rgba(115, 128, 236, 0.1);
+    }
+    
+    .icon-circle.danger {
+      background-color: rgba(255, 119, 130, 0.1);
+    }
+    
+    .icon-circle.success {
+      background-color: rgba(65, 241, 182, 0.1);
+    }
+    
+    .icon-circle.warning {
+      background-color: rgba(255, 187, 85, 0.1);
+    }
+    
+    .icon-circle span {
+      font-size: 24px;
+    }
+    
+    .icon-circle.primary span {
+      color: #7380ec;
+    }
+    
+    .icon-circle.danger span {
+      color: #ff7782;
+    }
+    
+    .icon-circle.success span {
+      color: #41f1b6;
+    }
+    
+    .icon-circle.warning span {
+      color: #ffbb55;
+    }
+    
+    .stats-content {
+      margin-top: 5px;
+    }
+    
+    .stats-content p {
+      color: #677483;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    
+    .stats-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #363949;
+      margin: 0;
+    }
+    
+    /* Responsivité des cartes de statistiques */
+    @media screen and (max-width: 1200px) {
+      .insights {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      .insights {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Style pour les traits colorés au-dessus des cartes de statistiques */
+    .trend-line {
+      height: 4px;
+      border-radius: 2px;
+      margin-bottom: 10px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    
+    /* Adapter le style existant des cartes pour accueillir les traits */
+    main .insights > div {
+      position: relative;
+      overflow: hidden;
+      padding-top: 20px;
+    }
+
+    /* Style pour le footer */
+    .admin-footer {
+      position: fixed;
+      bottom: 0;
+      left: 15rem;  /* Aligné avec le contenu principal (à droite de la sidebar) */
+      right: 0;
+      padding: 15px 20px;
+      background-color: #f0f2fa;
+      text-align: right;
+      z-index: 100;
+      border-top: 1px solid #e6e8f0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    }
+    
+    .footer-content {
+      padding-right: 20px;
+    }
+    
+    .copyright {
+      color: #677483;
+      font-size: 13px;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    /* Ajuster main pour éviter que le contenu ne soit caché par le footer fixe */
+    main {
+      padding-bottom: 60px;
+    }
+    
+    /* Adaptation pour les écrans plus petits */
+    @media screen and (max-width: 1200px) {
+      .admin-footer {
+        left: 5.6rem;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      .admin-footer {
+        left: 0;
+      }
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h2><span class="danger">HotelEase</span></h2>
+        </div>
+        <div class="close" id="close_btn">
+          <span class="material-symbols-sharp">close</span>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <a href="{% url 'hotelweb:admin_dashboard' %}" class="active">
+          <span class="material-symbols-sharp">grid_view</span>
+          <h3>Dashboard</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_booking' %}">
+          <span class="material-symbols-sharp">calendar_month</span>
+          <h3>Booking</h3>
+        </a>
+
+
+        <a href="{% url 'hotelweb:admin_room' %}">
+            <span class="material-symbols-sharp">home</span>
+          <h3>Room</h3>
+        </a>
+        
+
+       
+        <a href="{% url 'hotelweb:admin_payment' %}">
+          <span class="material-symbols-sharp">payments</span>
+          <h3>Payment</h3>
+        </a>
+        
+        
+
+        <a href="{% url 'hotelweb:admin_about_us' %}">
+          <span class="material-symbols-sharp">receipt_long</span>
+          <h3>About us</h3>
+        </a>
+        <a href="{% url 'hotelweb:logout' %}">
+          <span class="material-symbols-sharp">logout</span>
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </aside>
+
+    <main>
+      <h1>Dashboard</h1>
+
+      <div class="date">
+        <input type="date" />
+      </div>
+
+      <div class="insights">
+        <div class="sales">
+          <div class="trend-line" style="background-color: #FF8B4B;"></div>
+          <span class="material-symbols-sharp">trending_up</span>
+          <div class="middle">
+            <div class="left">
+              <h3>Total Booking</h3>
+              <h1>{{ total_bookings }}</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="expenses">
+          <div class="trend-line" style="background-color: #E85B7D;"></div>
+          <span class="material-symbols-sharp">local_mall</span>
+          <div class="middle">
+            <div class="left">
+              <h3>Rooms Available</h3>
+              <h1>{{ rooms_available }}</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="income">
+          <div class="trend-line" style="background-color: #2EE59D;"></div>
+          <span class="material-symbols-sharp">stacked_line_chart</span>
+          <div class="middle">
+            <div class="left">
+              <h3>New Users</h3>
+              <h1>{{ new_users }}</h3>
+            </div>
+          </div>
+        </div>
+        
+        <div class="revenue">
+          <div class="trend-line" style="background-color: #7380ec;"></div>
+          <span class="material-symbols-sharp">account_balance_wallet</span>
+          <div class="middle">
+            <div class="left">
+              <h3>Total Revenue</h3>
+              <h1>${{ total_revenue|default:'4400.00' }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Dashboard -->
+      <div class="analytics-wrapper">
+        <!-- Sales Revenue Card -->
+        <div class="analytics-card">
+          <div class="card-header">
+            <div>
+              <h2>Sales Revenue</h2>
+              <p class="subtitle">In last 30 days revenue from rent.</p>
+            </div>
+            <span class="material-symbols-sharp info-icon">info</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat">
+              <p class="stat-label">Monthly</p>
+              <h3>9.28K</h3>
+              <p class="change up">↑ 4.63%</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Weekly</p>
+              <h3>2.69K</h3>
+              <p class="change down">↓ 1.92%</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Daily (Avg)</p>
+              <h3>0.94K</h3>
+              <p class="change up">↑ 3.45%</p>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="salesRevenueChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Room Booking Card -->
+        <div class="analytics-card">
+          <div class="card-header">
+            <h2>Room Booking Chart</h2>
+            <select class="period-select">
+              <option>30 Days</option>
+            </select>
+          </div>
+
+          <div class="chart-with-legend">
+            <div class="donut-container">
+              <canvas id="roomBookingChart"></canvas>
+            </div>
+            <div class="legend">
+              <div class="legend-item">
+                <span class="dot single"></span>
+                <span class="type">Single</span>
+                <span class="count">1913</span>
+                <span class="percent">58.63%</span>
+              </div>
+              <div class="legend-item">
+                <span class="dot double"></span>
+                <span class="type">Double</span>
+                <span class="count">859</span>
+                <span class="percent">23.94%</span>
+              </div>
+              <div class="legend-item">
+                <span class="dot delux"></span>
+                <span class="type">Delux</span>
+                <span class="count">482</span>
+                <span class="percent">12.94%</span>
+              </div>
+              <div class="legend-item">
+                <span class="dot suit"></span>
+                <span class="type">Suit</span>
+                <span class="count">138</span>
+                <span class="percent">4.49%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Overview Section - Improved Title Structure -->
+      <div class="section-header-container">
+        <div class="section-header">
+          <div class="section-icon">
+            <span class="material-symbols-sharp">home</span>
+          </div>
+          <div class="section-title">
+            <h2>ROOM TYPE</h2>
+            <p>Here is our Various room type.</p>
+          </div>
+        </div>
+        <div class="section-action">
+          <a href="{% url 'hotelweb:admin_room' %}" class="view-all-btn">View All Rooms</a>
+        </div>
+      </div>
+      <div class="rooms-grid">
+        {% for room in room_overview %}
+          <div class="room-card">
+            <img src="{% static room.image %}" class="room-img" alt="{{ room.name }}">
+            <h3>{{ room.name }}</h3>
+            <!-- Progress bar for availability -->
+            <div class="room-progress-bar">
+              <!-- Suppression de l'attribut style dynamique qui causait des erreurs -->
+              <div class="room-progress room-progress-{{ room.id }}" data-percent="{{ room.percent_available }}"></div>
+            </div>
+            <script>
+              // Script pour définir la largeur via JavaScript à la place
+              document.addEventListener('DOMContentLoaded', function() {
+                const progressBar = document.querySelector('.room-progress-{{ room.id }}');
+                if (progressBar) {
+                  const percent = progressBar.getAttribute('data-percent');
+                  progressBar.style.width = percent + '%';
+                }
+              });
+            </script>
+            <p>price: ${{ room.price }}</p>
+          </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Payment Transactions Section - Improved Title Structure -->
+      <div class="section-header-container">
+        <div class="section-header">
+          <div class="section-icon">
+            <span class="material-symbols-sharp">payments</span>
+          </div>
+          <div class="section-title">
+            <h2>PAYMENT TRANSACTIONS</h2>
+            <p>Recent payment activities</p>
+          </div>
+        </div>
+        <div class="section-action">
+          <div class="payment-stat-item">
+            <span class="total-count">Total: {{ paid_bookings.count }}</span>
+          </div>
+          <a href="{% url 'hotelweb:admin_payment' %}" class="view-all-btn">View All</a>
+        </div>
+      </div>
+      <div class="payment-container">
+        <div class="payment-search-container">
+          <input type="text" id="paymentSearchInput" class="payment-search" placeholder="Search by name, room, or payment method...">
+          <span class="search-icon material-symbols-sharp">search</span>
+        </div>
+        
+        <div class="payment-table-container">
+          <table class="payment-table">
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Room</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+                <th>Booking Dates</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking in paid_bookings|slice:":3" %}
+              <tr class="payment-row">
+                <td>
+                  <div class="guest-name">{{ booking.guest_first_name }} {{ booking.guest_last_name }}</div>
+                  <div class="guest-email">{{ booking.guest_email }}</div>
+                </td>
+                <td>
+                  <div class="room-number">{{ booking.room.room_number }}</div>
+                  <div class="room-type">{{ booking.room.room_type.name }}</div>
+                </td>
+                <td class="amount">${{ booking.total_price|floatformat:2 }}</td>
+                <td>
+                  <div class="payment-method">
+                    <span class="material-symbols-sharp">credit_card</span>
+                    <span>Credit Card</span>
+                  </div>
+                </td>
+                <td>{{ booking.payment_date|date:"M d, Y H:i" }}</td>
+                <td><span class="status-paid">Paid</span></td>
+                <td>
+                  <div class="booking-dates">{{ booking.check_in_date|date:"M d" }} - {{ booking.check_out_date|date:"M d, Y" }}</div>
+                  <div class="booking-year">{{ booking.check_in_date|date:"Y" }}</div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr class="no-payments-row">
+                <td colspan="7">
+                  <div class="no-data-message">
+                    <span class="material-symbols-sharp">payments</span>
+                    <p>No payment transactions found</p>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <script>
+        // Script pour la recherche dans le tableau des paiements
+        document.addEventListener('DOMContentLoaded', function() {
+          const searchInput = document.getElementById('paymentSearchInput');
+          
+          if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+              const searchTerm = this.value.toLowerCase();
+              const rows = document.querySelectorAll('.payment-row');
+              
+              rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+              });
+              
+              // Afficher un message si aucun résultat
+              const noResultsRow = document.querySelector('.no-results-row');
+              const hasVisibleRows = [...rows].some(row => row.style.display !== 'none');
+              
+              if (!hasVisibleRows && rows.length > 0) {
+                if (!noResultsRow) {
+                  const tbody = document.querySelector('.payment-table tbody');
+                  const newRow = document.createElement('tr');
+                  newRow.className = 'no-results-row';
+                  newRow.innerHTML = '<td colspan="7"><div class="no-data-message"><span class="material-symbols-sharp">search_off</span><p>No results found for "' + searchTerm + '"</p></div></td>';
+                  tbody.appendChild(newRow);
+                } else {
+                  noResultsRow.querySelector('p').textContent = 'No results found for "' + searchTerm + '"';
+                  noResultsRow.style.display = '';
+                }
+              } else if (noResultsRow) {
+                noResultsRow.style.display = 'none';
+              }
+            });
+          }
+        });
+      </script>
+
+    </main>
+
+    <div class="right">
+      <div class="top">
+        <button id="menu_bar">
+          <span class="material-symbols-sharp">menu</span>
+        </button>
+
+        <div class="profile">
+          <div class="info">
+            <p><b>WELCOME!</b></p>
+            <p>{{ user_name|default:'Admin' }}</p>
+          </div>
+          <div class="profile-photo">
+            <img src="{% static 'profile-5.jpg' %}" alt="" />
+          </div>
+        </div>
+      </div>
+   
+      <!-- La section "Hotel Activity" a été supprimée ici -->
+      
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

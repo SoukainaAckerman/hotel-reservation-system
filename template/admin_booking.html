@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Booking - HotelEase</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+  <link rel="stylesheet" href="{% static 'css_admin.css' %}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #f6f6f9;
+      padding: 2rem;
+    }
+
+    .main-title {
+      color: #363949;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub-title {
+      color: #363949;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+
+    .booking-form {
+      background-color: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      color: #363949;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #dce1eb;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #363949;
+    }
+
+    .form-control::placeholder {
+      color: #b4b4b4;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #7380ec;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23363949' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+
+    .file-input-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .file-input-group input[type="text"] {
+      flex: 1;
+    }
+
+    .browse-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: #f0f0f7;
+      border: 1px solid #dce1eb;
+      border-radius: 6px;
+      color: #363949;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .date-input {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .date-input input {
+      width: 100%;
+      padding-right: 2.5rem;
+    }
+
+    .calendar-icon {
+      position: absolute;
+      right: 0.75rem;
+      color: #7380ec;
+      pointer-events: none;
+    }
+
+    .date-input input::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    .button-container {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .add-booking-btn {
+      background-color: #7380ec;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-booking-btn:hover {
+      background-color: #6370db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h2><span class="danger">HotelEase</span></h2>
+        </div>
+        <div class="close" id="close_btn">
+          <span class="material-symbols-sharp">close</span>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <a href="{% url 'hotelweb:admin_dashboard' %}">
+          <span class="material-symbols-sharp">grid_view</span>
+          <h3>Home</h3>
+        </a>
+        <a href="{% url 'hotelweb:admin_booking' %}" class="active">
+          <span class="material-symbols-sharp">calendar_month</span>
+          <h3>Booking</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_room' %}">
+          <span class="material-symbols-sharp">home</span>
+          <h3>Room</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_payment' %}">
+          <span class="material-symbols-sharp">payments</span>
+          <h3>Payment</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:admin_about_us' %}">
+          <span class="material-symbols-sharp">receipt_long</span>
+          <h3>About us</h3>
+        </a>
+
+        <a href="{% url 'hotelweb:logout' %}">
+          <span class="material-symbols-sharp">logout</span>
+          <h3>Logout</h3>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div class="dashboard-container">
+        <header>
+          <h1>Booking Management</h1>
+        </header>
+      </div>
+
+      <!-- Table: User Reservations with Annuler/Modifier -->
+      <div class="user-reservations-section" style="margin: 2rem 0 1.5rem 0; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <h2 style="font-size:2rem; font-weight:700; color:#363949; padding:2rem 2rem 1rem 2rem;">Réservations Utilisateurs</h2>
+        <table style="width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; font-size:1rem;">
+          <thead>
+            <tr style="background:#f8f9fb; color:#a0aec0; text-align:left;">
+              <th style="padding:1rem 1.5rem;">Nom</th>
+              <th style="padding:1rem 1.5rem;">Email</th>
+              <th style="padding:1rem 1.5rem;">Room</th>
+              <th style="padding:1rem 1.5rem;">Room type</th>
+              <th style="padding:1rem 1.5rem;">Check-in</th>
+              <th style="padding:1rem 1.5rem;">Check-out</th>
+              <th style="padding:1rem 1.5rem;">Statut</th>
+              <th style="padding:1rem 1.5rem;">Payment</th>
+              <th style="padding:1rem 1.5rem;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in user_bookings %}
+            <tr style="border-bottom:1px solid #f0f0f0;">
+              <td style="padding:1rem 1.5rem;">{{ booking.guest_first_name }} {{ booking.guest_last_name }}</td>
+              <td style="padding:1rem 1.5rem;">{{ booking.guest_email }}</td>
+              <td style="padding:1rem 1.5rem;">{{ booking.room.room_number }}</td>
+              <td style="padding:1rem 1.5rem;">{{ booking.room.room_type }}</td>
+              <td style="padding:1rem 1.5rem;">{{ booking.check_in_date }}</td>
+              <td style="padding:1rem 1.5rem;">{{ booking.check_out_date }}</td>
+              <td style="padding:1rem 1.5rem; color:{% if booking.status == 'confirmed' %}#41f1b6{% elif booking.status == 'annulee' %}#ff7782{% else %}#aaa{% endif %}; font-weight:600;">
+                {% if booking.status == 'confirmed' %}Confirmée{% elif booking.status == 'annulee' %}Réservée Annulée{% else %}{{ booking.status|title }}{% endif %}
+              </td>
+              <td style="padding:1rem 1.5rem; color:{% if booking.payment_status == 'paid' %}#41f1b6{% else %}#ff7782{% endif %}; font-weight:600;">
+                {% if booking.payment_status == 'paid' %}Paid{% else %}Unpaid{% endif %}
+              </td>
+              <td style="padding:1rem 1.5rem;">
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="cancel_booking_id" value="{{ booking.id }}">
+                </form>
+                <button class="edit-booking-btn" style="background:#7380ec; color:white; font-size:1rem; font-weight:600; border-radius:6px; padding:0.5rem 1.2rem; margin-left:0.5rem; cursor:pointer;" data-booking='{"id": "{{ booking.id }}", "guest_first_name": "{{ booking.guest_first_name|escapejs }}", "guest_last_name": "{{ booking.guest_last_name|escapejs }}", "guest_email": "{{ booking.guest_email|escapejs }}", "guest_phone": "{{ booking.guest_phone|escapejs }}", "check_in_date": "{{ booking.check_in_date }}", "check_out_date": "{{ booking.check_out_date }}", "status": "{{ booking.status }}", "payment_status": "{{ booking.payment_status }}"}'>Modifier</button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8" style="text-align:center; color:#aaa; padding:2rem;">Aucune réservation trouvée.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sub-title">Add Booking</h2>
+
+      {# Copied booking form from booking.html #}
+      <form class="booking-form" method="post" id="bookingForm" onsubmit="event.preventDefault(); checkAvailability();">
+        {% csrf_token %}
+        <div class="form-grid">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" class="form-control" id="firstName" name="first_name" value="{{ request.POST.first_name }}" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="last_name" value="{{ request.POST.last_name }}" required>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select class="form-control" id="gender" name="gender" required>
+              <option value="" disabled {% if not request.POST.gender %}selected{% endif %}>Select Gender</option>
+              <option value="male" {% if request.POST.gender == 'male' %}selected{% endif %}>Male</option>
+              <option value="female" {% if request.POST.gender == 'female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone" value="{{ request.POST.phone }}" required>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ request.POST.email }}" required>
+          </div>
+          <div class="form-group">
+            <label>Select Room Type</label>
+            <select class="form-control" id="roomType" name="room_type" required>
+              <option value="" disabled {% if not selected_type %}selected{% endif %}>Select Room Type</option>
+              <option value="Standard Room" {% if selected_type == 'Standard Room' %}selected{% endif %}>Standard Room</option>
+              <option value="Superior Room" {% if selected_type == 'Superior Room' %}selected{% endif %}>Superior Room</option>
+              <option value="Deluxe Room" {% if selected_type == 'Deluxe Room' %}selected{% endif %}>Deluxe Room</option>
+              <option value="Family Room" {% if selected_type == 'Family Room' %}selected{% endif %}>Family Room</option>
+              <option value="Executive Room" {% if selected_type == 'Executive Room' %}selected{% endif %}>Executive Room</option>
+              <option value="Ocean View Room" {% if selected_type == 'Ocean View Room' %}selected{% endif %}>Ocean View Room</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Check-in Date</label>
+            <input type="date" class="form-control" id="checkInDate" name="check_in_date" value="{{ check_in }}" required>
+          </div>
+          <div class="form-group">
+            <label>Check-out Date</label>
+            <input type="date" class="form-control" id="checkOutDate" name="check_out_date" value="{{ check_out }}" required>
+          </div>
+        </div>
+        <div class="button-container">
+          <button type="submit" name="check_availability" class="add-booking-btn">Check Availability</button>
+        </div>
+      </form>
+
+      <!-- Available Rooms Section -->
+      <div id="availableRooms" style="display: none; margin-top: 2rem;">
+        <h2 class="sub-title">Available Rooms</h2>
+        <div class="rooms-grid"></div>
+      </div>
+
+      <!-- Booking Modal -->
+      <div id="bookingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <h2>Confirm Booking</h2>
+          <div id="bookingDetails"></div>
+          <div class="modal-buttons">
+            <button onclick="confirmBooking()" class="add-booking-btn">Confirm Booking</button>
+            <button onclick="closeModal()" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="editBookingModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <h2>Modifier la réservation</h2>
+          <form id="editBookingForm">
+            {% csrf_token %}
+            <input type="hidden" id="editBookingId" name="booking_id">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <label>Nom</label>
+                <input type="text" id="editFirstName" name="first_name" class="form-control" required>
+              </div>
+              <div>
+                <label>Prénom</label>
+                <input type="text" id="editLastName" name="last_name" class="form-control" required>
+              </div>
+              <div>
+                <label>Email</label>
+                <input type="email" id="editEmail" name="email" class="form-control" required>
+              </div>
+              <div>
+                <label>Téléphone</label>
+                <input type="text" id="editPhone" name="phone" class="form-control" required>
+              </div>
+              <div>
+                <label>Check-in</label>
+                <input type="date" id="editCheckIn" name="check_in_date" class="form-control" required>
+              </div>
+              <div>
+                <label>Check-out</label>
+                <input type="date" id="editCheckOut" name="check_out_date" class="form-control" required>
+              </div>
+              <div>
+                <label>Statut</label>
+                <select id="editStatus" name="status" class="form-control" required>
+                  <option value="confirmed">Confirmée</option>
+                  <option value="annulee">Annulée</option>
+                </select>
+              </div>
+              <div>
+                <label>Payment Status</label>
+                <select id="editPaymentStatus" name="payment_status" class="form-control" required>
+                  <option value="unpaid">Unpaid</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-buttons" style="margin-top:1.5rem;">
+              <button type="submit" class="add-booking-btn">Enregistrer</button>
+              <button type="button" class="cancel-btn" onclick="closeEditModal()">Annuler</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <style>
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .modal-content {
+          background-color: white;
+          padding: 2rem;
+          border-radius: 8px;
+          max-width: 500px;
+          width: 90%;
+        }
+
+        .modal-buttons {
+          display: flex;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .cancel-btn {
+          background-color: #ff7782;
+          color: white;
+          border: none;
+          padding: 0.8rem 2rem;
+          border-radius: 6px;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+
+        .rooms-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1.5rem;
+          margin-top: 1rem;
+        }
+
+        .room-card {
+          background-color: white;
+          border-radius: 8px;
+          padding: 1.5rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+      </style>
+
+      <script>
+        // Set minimum date for check-in and check-out
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkInDate').min = today;
+        document.getElementById('checkOutDate').min = today;
+
+        // Update check-out minimum date when check-in is selected
+        document.getElementById('checkInDate').addEventListener('change', function() {
+          document.getElementById('checkOutDate').min = this.value;
+        });
+
+        function getRoomNumbers(roomType) {
+          const prefix = {
+            'standard': 'A',
+            'superior': 'B',
+            'deluxe': 'C',
+            'family': 'D',
+            'single': 'E',
+            'suite': 'F'
+          }[roomType];
+
+          const rooms = [];
+          for (let i = 1; i <= 5; i++) {
+            rooms.push({
+              id: `${prefix}${i}`,
+              number: `${prefix}${i}`,
+              type: roomType,
+              price: getRoomPrice(roomType)
+            });
+          }
+          return rooms;
+        }
+
+        function getRoomPrice(roomType) {
+          const prices = {
+            'standard': 100,
+            'superior': 150,
+            'deluxe': 200,
+            'family': 250,
+            'single': 80,
+            'suite': 300
+          };
+          return prices[roomType];
+        }
+
+        function checkAvailability() {
+          const form = document.getElementById('bookingForm');
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const roomType = document.getElementById('roomType').value;
+          const checkIn = document.getElementById('checkInDate').value;
+          const checkOut = document.getElementById('checkOutDate').value;
+
+          fetch('/hotelweb/booking/check-availability/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+              room_type: roomType,
+              check_in: checkIn,
+              check_out: checkOut
+            })
+          })
+            .then(response => response.json())
+            .then(data => {
+              const container = document.getElementById('availableRooms');
+              const grid = container.querySelector('.rooms-grid');
+              grid.innerHTML = '';
+              if (data.rooms && data.rooms.length > 0) {
+                data.rooms.forEach(room => {
+                  const card = document.createElement('div');
+                  card.className = 'room-card';
+                  card.innerHTML = `
+                    <h3>Room ${room.room_number}</h3>
+                    <p>Status: <b style="color:${room.is_available ? 'green' : 'red'}">${room.is_available ? 'Available' : 'Not Available'}</b></p>
+                    <p>Type: ${room.room_type}</p>
+                    <p>Price per night: $${room.price}</p>
+                    <button class="add-booking-btn" ${room.is_available ? '' : 'disabled'} onclick="openBookingModal({number: '${room.room_number}', type: '${room.room_type}', price: ${room.price}})">Select Room</button>
+                  `;
+                  grid.appendChild(card);
+                });
+              } else {
+                grid.innerHTML = '<p>No rooms found for this type and date range.</p>';
+              }
+              container.style.display = 'block';
+            })
+            .catch(error => {
+              alert('Error loading room availability');
+            });
+        }
+
+        function confirmBooking() {
+          const form = document.getElementById('bookingForm');
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          
+          const formData = {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            gender: document.getElementById('gender').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value,
+            room_number: currentRoom.number,
+            check_in_date: document.getElementById('checkInDate').value,
+            check_out_date: document.getElementById('checkOutDate').value,
+            total_price: calculateTotalPrice(currentRoom.price)
+          };
+
+          // Envoyer les données au backend Django
+          fetch('/hotelweb/booking/create/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(formData)
+          })
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(data => Promise.reject(data));
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.success) {
+              alert('Booking confirmed! You will receive a confirmation email shortly.');
+              closeModal();
+              form.reset();
+              document.getElementById('availableRooms').style.display = 'none';
+            } else {
+              alert('Error: ' + (data.error || 'Unknown error occurred'));
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Error: ' + (error.error || 'An error occurred while processing your booking.'));
+          });
+        }
+
+        function calculateTotalPrice(pricePerNight) {
+          const checkIn = new Date(document.getElementById('checkInDate').value);
+          const checkOut = new Date(document.getElementById('checkOutDate').value);
+          const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+          return pricePerNight * nights;
+        }
+
+        let currentRoom = null;
+
+        function openBookingModal(room) {
+          currentRoom = room;
+          const checkIn = new Date(document.getElementById('checkInDate').value);
+          const checkOut = new Date(document.getElementById('checkOutDate').value);
+          const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+          const totalPrice = room.price * nights;
+
+          const modal = document.getElementById('bookingModal');
+          const details = document.getElementById('bookingDetails');
+          details.innerHTML = `
+            <p><strong>Room Number:</strong> ${room.number}</p>
+            <p><strong>Room Type:</strong> ${room.type.charAt(0).toUpperCase() + room.type.slice(1)} Room</p>
+            <p><strong>Check-in:</strong> ${checkIn.toLocaleDateString()}</p>
+            <p><strong>Check-out:</strong> ${checkOut.toLocaleDateString()}</p>
+            <p><strong>Number of Nights:</strong> ${nights}</p>
+            <p><strong>Total Price:</strong> $${totalPrice}</p>
+          `;
+          modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+          document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function openEditModal(booking) {
+            document.getElementById('editBookingId').value = booking.id;
+            document.getElementById('editFirstName').value = booking.guest_first_name;
+            document.getElementById('editLastName').value = booking.guest_last_name;
+            document.getElementById('editEmail').value = booking.guest_email;
+            document.getElementById('editPhone').value = booking.guest_phone;
+            document.getElementById('editCheckIn').value = booking.check_in_date;
+            document.getElementById('editCheckOut').value = booking.check_out_date;
+            document.getElementById('editStatus').value = booking.status || 'confirmed';
+            document.getElementById('editPaymentStatus').value = booking.payment_status || 'unpaid';
+            document.getElementById('editBookingModal').style.display = 'flex';
+        }
+        function closeEditModal() {
+          document.getElementById('editBookingModal').style.display = 'none';
+        }
+        // Attach event listeners to Modifier buttons
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('.edit-booking-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              const booking = JSON.parse(this.dataset.booking);
+              openEditModal(booking);
+            });
+          });
+          document.getElementById('editBookingForm').onsubmit = function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+              booking_id: form.editBookingId.value,
+              first_name: form.editFirstName.value,
+              last_name: form.editLastName.value,
+              email: form.editEmail.value,
+              phone: form.editPhone.value,
+              check_in_date: form.editCheckIn.value,
+              check_out_date: form.editCheckOut.value,
+              status: form.editStatus.value,
+              payment_status: form.editPaymentStatus.value,
+              csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value
+            };
+            fetch('/hotelweb/booking/update/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-CSRFToken': data.csrfmiddlewaretoken },
+              body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(resp => {
+              if(resp.success) {
+                alert('Réservation modifiée !');
+                closeEditModal();
+                window.location.reload();
+              } else {
+                alert('Erreur: ' + (resp.error || 'Modification impossible.'));
+              }
+            });
+          }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+          const roomTypeSelect = document.getElementById('roomType');
+          const roomNumberSelect = document.getElementById('roomNumber');
+          const roomNumberGroup = document.getElementById('roomNumberGroup');
+
+          function getRoomOptions(type) {
+            let prefix = '';
+            switch (type) {
+              case 'Standard Room': prefix = 'A'; break;
+              case 'Superior Room': prefix = 'B'; break;
+              case 'Deluxe Room': prefix = 'C'; break;
+              case 'Family Suite': prefix = 'D'; break;
+              case 'Executive Suite': prefix = 'E'; break;
+              case 'Ocean View Room': prefix = 'F'; break;
+              default: prefix = ''; break;
+            }
+            let options = '';
+            for (let i = 1; i <= 5; i++) {
+              options += `<option value="${prefix}${i}">${prefix}${i}</option>`;
+            }
+            return options;
+          }
+
+          roomTypeSelect.addEventListener('change', function () {
+            const type = roomTypeSelect.value;
+            if (type) {
+              roomNumberSelect.innerHTML = getRoomOptions(type);
+              roomNumberGroup.style.display = 'block';
+            } else {
+              roomNumberSelect.innerHTML = '';
+              roomNumberGroup.style.display = 'none';
+            }
+          });
+
+          // Initialize on page load if a type is already selected
+          if (roomTypeSelect.value) {
+            roomNumberSelect.innerHTML = getRoomOptions(roomTypeSelect.value);
+            roomNumberGroup.style.display = 'block';
+          } else {
+            roomNumberGroup.style.display = 'none';
+          }
+        });
+      </script>
+    </main>
+
+    <style>
+      main {
+        padding: 2rem;
+        background-color: #f6f6f9;
+      }
+
+      .main-title {
+        color: #363949;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .add-booking {
+        color: #363949;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        font-weight: normal;
+      }
+
+      .booking-form-container {
+        background: transparent;
+        padding: 1rem;
+      }
+
+      .booking-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .form-group label {
+        color: #363949;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-input, .form-select {
+        padding: 0.8rem;
+        border: 1px solid #dce1eb;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        background-color: white;
+        color: #363949;
+      }
+
+      .form-input::placeholder {
+        color: #b4b4b4;
+      }
+
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23363949' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+      }
+
+      .form-input:focus, .form-select:focus {
+        outline: none;
+        border-color: #7380ec;
+      }
+    </style>
+  </div>
+
+  <script src="{% static 'script.js' %}"></script>
+</body>
+</html>

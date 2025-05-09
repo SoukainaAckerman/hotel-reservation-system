@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - HotelEase</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    <style>
+        :root {
+            --primary-color: #7380ec;
+            --color-white: #fff;
+            --color-dark: hsl(231, 15%, 25%);
+            --color-dark-variant: #677483;
+            --color-background: #f0f0ff;
+            --color-info-dark: #7d8da1;
+            --box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
+            --border-radius: 1.5rem;
+            --card-padding: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--color-background);
+            color: var(--color-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* About Section Styles */
+        .about-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            padding: 3rem;
+            background: var(--color-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .about-header h1 {
+            font-size: 2.5rem;
+            color: #7380ec;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .about-header p {
+            color: var(--color-dark-variant);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 100%;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .about-card {
+            background: var(--color-white);
+            padding: var(--card-padding);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: all 300ms ease;
+        }
+
+        .about-card h2 {
+            color: #7380ec;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .about-card p {
+            color: var(--color-dark-variant);
+            line-height: 1.6;
+        }
+
+        .about-card .icon {
+            font-size: 2rem;
+            color: #7380ec;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .about-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .about-header {
+                padding: 1.5rem;
+            }
+
+            .about-header h1 {
+                font-size: 2rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Hide the additional description for now */
+        .about-description {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <h2><span class="danger">HotelEase</h2>
+                </div>
+                <div class="close" id="close_btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="{% url 'welcome' %}">
+                    <span class="material-symbols-sharp">grid_view</span>
+                    <h3>Home</h3>
+                </a>
+
+                <a href="{% url 'hotelweb:booking' %}">
+                    <span class="material-symbols-sharp">calendar_month</span>
+                    <h3>Booking</h3>
+                </a>
+
+                <a href="{% url 'hotelweb:room' %}" class="">
+                    <span class="material-symbols-sharp">home</span>
+                    <h3>Room</h3>
+                </a>
+
+                <a href="{% url 'hotelweb:payement' %}">
+                    <span class="material-symbols-sharp">payments</span>
+                    <h3>Payment</h3>
+                </a>
+
+                <a href="{% url 'hotelweb:about_us' %}" class="active">
+                    <span class="material-symbols-sharp">receipt_long</span>
+                    <h3>About us</h3>
+                </a>
+
+                <a href="{% url 'hotelweb:logout' %}">
+                    <span class="material-symbols-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <!-- About Section Matching the Image -->
+            <div class="about-header">
+                <h1>About HotelEase</h1>
+                <p>HotelEase is a modern and user-friendly hotel management solution designed to streamline daily operations, enhance guest experiences, and boost the overall profitability of hospitality businesses. Our intuitive platform allows hoteliers to efficiently manage bookings, rooms, payments, and more all from a single, centralized interface. At HotelEase, we combine cutting-edge technology with deep industry insight to deliver a reliable, secure, and scalable service.</p>
+            </div>
+
+            <div class="about-content">
+                <div class="about-card">
+                    <span class="material-icons-sharp icon">hotel</span>
+                    <h2>Our Mission</h2>
+                    <p>To provide exceptional hotel management solutions that streamline operations and enhance guest experiences. We strive to make hotel management effortless and efficient.</p>
+                </div>
+
+                <div class="about-card">
+                    <span class="material-icons-sharp icon">stars</span>
+                    <h2>Our Vision</h2>
+                    <p>To be the leading innovator in hotel management technology, setting new standards for efficiency, guest satisfaction, and operational excellence in the hospitality industry.</p>
+                </div>
+
+                <div class="about-card">
+                    <span class="material-icons-sharp icon">diversity_3</span>
+                    <h2>Our Values</h2>
+                    <p>Excellence, Innovation, Integrity, and Customer Focus drive everything we do. We believe in creating lasting relationships with our clients and delivering solutions that exceed expectations.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
